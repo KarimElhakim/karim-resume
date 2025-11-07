@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import { 
-  SiCsharp, SiDotnet, SiMicrosoft, SiMicrosoftsqlserver, SiPostgresql, SiMongodb,
-  SiGit, SiDocker, SiMicrosoftazure, SiJest, SiWebpack, SiVite, SiLinux,
-  SiSharepoint, SiServicenow, SiJson, SiNodedotjs, SiExpress, SiPython, SiDjango,
+  SiDotnet, SiPostgresql, SiMongodb,
+  SiGit, SiDocker, SiJest, SiWebpack, SiVite, SiLinux,
+  SiJson, SiNodedotjs, SiExpress, SiPython, SiDjango,
   SiReact, SiJavascript, SiTypescript, SiHtml5, SiCss3, SiSass, SiTailwindcss
 } from 'react-icons/si'
-import { FaUniversity, FaGraduationCap } from 'react-icons/fa'
+import { FaMicrosoft, FaCode, FaDatabase, FaCloud, FaUniversity, FaGraduationCap } from 'react-icons/fa'
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -262,22 +262,22 @@ function App() {
             <div className="skill-category">
               <h3>Languages & Frameworks</h3>
               <div className="skill-items">
-                <span className="skill-tag"><SiCsharp className="skill-icon" /> C#</span>
+                <span className="skill-tag"><FaCode className="skill-icon" /> C#</span>
                 <span className="skill-tag"><SiDotnet className="skill-icon" /> .NET Core</span>
                 <span className="skill-tag"><SiDotnet className="skill-icon" /> .NET 5/6/7</span>
-                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> ASP.NET</span>
-                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> ASP.NET Core</span>
-                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> Web API</span>
+                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> ASP.NET</span>
+                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> ASP.NET Core</span>
+                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> Web API</span>
                 <span className="skill-tag"><SiNodedotjs className="skill-icon" /> REST</span>
               </div>
             </div>
             <div className="skill-category">
               <h3>Data & Persistence</h3>
               <div className="skill-items">
-                <span className="skill-tag"><SiMicrosoftsqlserver className="skill-icon" /> SQL Server</span>
-                <span className="skill-tag"><SiMicrosoftsqlserver className="skill-icon" /> T-SQL</span>
-                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> Entity Framework</span>
-                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> LINQ</span>
+                <span className="skill-tag"><FaDatabase className="skill-icon" /> SQL Server</span>
+                <span className="skill-tag"><FaDatabase className="skill-icon" /> T-SQL</span>
+                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> Entity Framework</span>
+                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> LINQ</span>
                 <span className="skill-tag"><SiPostgresql className="skill-icon" /> PostgreSQL</span>
                 <span className="skill-tag"><SiMongodb className="skill-icon" /> MongoDB</span>
               </div>
@@ -286,27 +286,27 @@ function App() {
               <h3>Tools & Dev Workflow</h3>
               <div className="skill-items">
                 <span className="skill-tag"><SiGit className="skill-icon" /> Git</span>
-                <span className="skill-tag"><SiMicrosoftazure className="skill-icon" /> Azure DevOps</span>
+                <span className="skill-tag"><FaCloud className="skill-icon" /> Azure DevOps</span>
                 <span className="skill-tag"><SiGit className="skill-icon" /> CI/CD</span>
                 <span className="skill-tag"><SiDocker className="skill-icon" /> Docker</span>
-                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> Visual Studio</span>
+                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> Visual Studio</span>
               </div>
             </div>
             <div className="skill-category">
               <h3>Cloud & Monitoring</h3>
               <div className="skill-items">
-                <span className="skill-tag"><SiMicrosoftazure className="skill-icon" /> Azure App Services</span>
-                <span className="skill-tag"><SiMicrosoftazure className="skill-icon" /> Azure Functions</span>
-                <span className="skill-tag"><SiMicrosoftazure className="skill-icon" /> Azure Storage</span>
-                <span className="skill-tag"><SiMicrosoftazure className="skill-icon" /> Application Insights</span>
+                <span className="skill-tag"><FaCloud className="skill-icon" /> Azure App Services</span>
+                <span className="skill-tag"><FaCloud className="skill-icon" /> Azure Functions</span>
+                <span className="skill-tag"><FaCloud className="skill-icon" /> Azure Storage</span>
+                <span className="skill-tag"><FaCloud className="skill-icon" /> Application Insights</span>
               </div>
             </div>
             <div className="skill-category">
               <h3>Integrations & Platforms</h3>
               <div className="skill-items">
-                <span className="skill-tag"><SiSharepoint className="skill-icon" /> SharePoint</span>
-                <span className="skill-tag"><SiServicenow className="skill-icon" /> ServiceNow</span>
-                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> AgilePoint</span>
+                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> SharePoint</span>
+                <span className="skill-tag"><FaCloud className="skill-icon" /> ServiceNow</span>
+                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> AgilePoint</span>
                 <span className="skill-tag"><SiNodedotjs className="skill-icon" /> REST Integrations</span>
                 <span className="skill-tag"><SiJson className="skill-icon" /> JSON</span>
                 <span className="skill-tag"><SiJson className="skill-icon" /> SOAP</span>
@@ -316,10 +316,10 @@ function App() {
               <h3>Testing & Quality</h3>
               <div className="skill-items">
                 <span className="skill-tag"><SiJest className="skill-icon" /> Unit Testing</span>
-                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> xUnit</span>
-                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> NUnit</span>
-                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> Debugging</span>
-                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> Serilog</span>
+                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> xUnit</span>
+                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> NUnit</span>
+                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> Debugging</span>
+                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> Serilog</span>
                 <span className="skill-tag"><SiGit className="skill-icon" /> Agile/Scrum</span>
               </div>
             </div>
