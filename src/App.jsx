@@ -6,7 +6,7 @@ import {
   SiJson, SiNodedotjs, SiExpress, SiPython, SiDjango,
   SiReact, SiJavascript, SiTypescript, SiHtml5, SiCss3, SiSass, SiTailwindcss
 } from 'react-icons/si'
-import { FaMicrosoft, FaCode, FaDatabase, FaCloud, FaUniversity, FaGraduationCap } from 'react-icons/fa'
+import { FaMicrosoft, FaCode, FaDatabase, FaCloud, FaUniversity, FaGraduationCap, FaDownload } from 'react-icons/fa'
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -104,6 +104,13 @@ function App() {
           <div className="hero-buttons">
             <a href="#contact" className="button primary">Get In Touch</a>
             <a href="#about" className="button secondary">Learn More</a>
+            <a 
+              href={`${import.meta.env.BASE_URL}${encodeURIComponent('Karim Elhakim Resume (EG).pdf')}`} 
+              download="Karim Elhakim Resume.pdf"
+              className="button download"
+            >
+              <FaDownload className="button-icon" /> Download Resume
+            </a>
           </div>
         </div>
       </section>
