@@ -353,7 +353,7 @@ function App() {
                 </div>
               </div>
               <div className="social-links">
-                <a href="https://www.linkedin.com/in/karim-ali-200725104" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="LinkedIn">LinkedIn</a>
+                <a href="https://www.linkedin.com/in/karim-elhakim-200725104/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="LinkedIn">LinkedIn</a>
               </div>
             </div>
             <form className="contact-form" onSubmit={handleSubmit}>
