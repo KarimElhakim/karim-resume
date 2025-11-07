@@ -249,6 +249,15 @@ function App() {
               <p>
                 Coursework in programming, control systems, and embedded technologies.
               </p>
+              <a 
+                href="https://aast.edu/en/programs-courses/program.php?unit_id=353&program_id=136&language_id=1" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="course-link-button"
+              >
+                View Course Details
+                <span className="link-arrow">→</span>
+              </a>
             </div>
           </div>
         </div>
