@@ -24,8 +24,7 @@ function App() {
 
     try {
       // Using Formspree - easier to set up than EmailJS
-      // Replace this with your Formspree endpoint after signing up at https://formspree.io
-      const formspreeEndpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT || 'https://formspree.io/f/xpwnqgvd'
+      const formspreeEndpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT || 'https://formspree.io/f/xyzbrvnz'
       
       const response = await fetch(formspreeEndpoint, {
         method: 'POST',
