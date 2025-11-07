@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
+import emailjs from '@emailjs/browser'
 import './App.css'
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
+  const [formStatus, setFormStatus] = useState({ loading: false, success: false, error: false, message: '' })
 
   useEffect(() => {
     const handleScroll = () => {
@@ -12,14 +14,57 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handleSubmit = (e) => {
+  // Initialize EmailJS with your public key
+  useEffect(() => {
+    emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY')
+  }, [])
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Form submission logic - you can integrate with your backend here
+    setFormStatus({ loading: true, success: false, error: false, message: '' })
+
     const formData = new FormData(e.target)
-    const data = Object.fromEntries(formData)
-    console.log('Form submitted:', data)
-    alert('Thank you for your message! I will get back to you soon.')
-    e.target.reset()
+    const data = {
+      from_name: formData.get('name'),
+      from_email: formData.get('email'),
+      message: formData.get('message'),
+      to_email: 'karimali1896@gmail.com'
+    }
+
+    try {
+      // Replace these with your EmailJS service ID, template ID, and public key
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID'
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID'
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY'
+
+      // Check if EmailJS is configured
+      if (serviceId === 'YOUR_SERVICE_ID' || templateId === 'YOUR_TEMPLATE_ID' || publicKey === 'YOUR_PUBLIC_KEY') {
+        throw new Error('EmailJS is not configured. Please set up EmailJS credentials.')
+      }
+
+      await emailjs.send(serviceId, templateId, data, publicKey)
+      
+      setFormStatus({ 
+        loading: false, 
+        success: true, 
+        error: false, 
+        message: 'Thank you! Your message has been sent successfully.' 
+      })
+      e.target.reset()
+      
+      // Clear success message after 5 seconds
+      setTimeout(() => {
+        setFormStatus({ loading: false, success: false, error: false, message: '' })
+      }, 5000)
+    } catch (error) {
+      console.error('EmailJS error:', error)
+      setFormStatus({ 
+        loading: false, 
+        success: false, 
+        error: true, 
+        message: 'Sorry, there was an error sending your message. Please try again or email me directly at karimali1896@gmail.com' 
+      })
+    }
   }
 
   return (
@@ -315,17 +360,24 @@ function App() {
             <form className="contact-form" onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="name">Name</label>
-                <input type="text" id="name" name="name" required />
+                <input type="text" id="name" name="name" required disabled={formStatus.loading} />
               </div>
               <div className="form-group">
                 <label htmlFor="email">Email</label>
-                <input type="email" id="email" name="email" required />
+                <input type="email" id="email" name="email" required disabled={formStatus.loading} />
               </div>
               <div className="form-group">
                 <label htmlFor="message">Message</label>
-                <textarea id="message" name="message" rows="5" required></textarea>
+                <textarea id="message" name="message" rows="5" required disabled={formStatus.loading}></textarea>
               </div>
-              <button type="submit" className="button primary">Send Message</button>
+              {formStatus.message && (
+                <div className={`form-message ${formStatus.success ? 'success' : formStatus.error ? 'error' : ''}`}>
+                  {formStatus.message}
+                </div>
+              )}
+              <button type="submit" className="button primary" disabled={formStatus.loading}>
+                {formStatus.loading ? 'Sending...' : 'Send Message'}
+              </button>
             </form>
           </div>
         </div>
