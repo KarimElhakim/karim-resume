@@ -156,7 +156,7 @@ function App() {
               <div className="timeline-content">
                 <div className="company-header">
                   <h3>Senior Software Engineer</h3>
-                  <img src="https://www.itworx.com/wp-content/uploads/2021/06/ITWORX-Logo.png" alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
+                  <img src="/itworx-logo.png" alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
                 </div>
                 <h4>ITWORX | 2023 - 2024</h4>
                 <p>
@@ -175,7 +175,7 @@ function App() {
               <div className="timeline-content">
                 <div className="company-header">
                   <h3>Software Support Specialist</h3>
-                  <img src="https://www.itworx.com/wp-content/uploads/2021/06/ITWORX-Logo.png" alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
+                  <img src="/itworx-logo.png" alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
                 </div>
                 <h4>ITWORX | 2020 - 2023</h4>
                 <p>
@@ -194,7 +194,7 @@ function App() {
               <div className="timeline-content">
                 <div className="company-header">
                   <h3>Application Support Specialist</h3>
-                  <img src="https://www.itworx.com/wp-content/uploads/2021/06/ITWORX-Logo.png" alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
+                  <img src="/itworx-logo.png" alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
                 </div>
                 <h4>ITWORX | 2019 - 2020</h4>
                 <p>
@@ -218,7 +218,7 @@ function App() {
           <div className="education-grid">
             <div className="education-card">
               <div className="education-header">
-                <img src="https://www.uwe.ac.uk/-/media/uwe/images/logo/uwe-logo.svg" alt="UWE Bristol Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none' }} />
+                <img src="/uwe-logo.svg" alt="UWE Bristol Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none' }} />
                 <div>
                   <h3>Master's in Artificial Intelligence</h3>
                   <h4>University of the West of England (UWE Bristol), UK | Completed: September 2025</h4>
@@ -240,7 +240,7 @@ function App() {
             </div>
             <div className="education-card">
               <div className="education-header">
-                <img src="https://www.aast.edu/en/images/logo.png" alt="AAST Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none' }} />
+                <img src="https://www.aast.edu/en/images/logo.png" alt="AAST Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none'; e.target.src = 'https://via.placeholder.com/120x60/006633/FFFFFF?text=AAST' }} />
                 <div>
                   <h3>Bachelor of Engineering in Mechatronics</h3>
                   <h4>Arab Academy for Science and Technology (AAST), Cairo, Egypt | Graduated: 2018</h4>
