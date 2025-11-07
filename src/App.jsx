@@ -6,19 +6,35 @@ import {
   SiJson, SiNodedotjs, SiExpress, SiPython, SiDjango,
   SiReact, SiJavascript, SiTypescript, SiHtml5, SiCss3, SiSass, SiTailwindcss
 } from 'react-icons/si'
-import { FaMicrosoft, FaCode, FaDatabase, FaCloud, FaUniversity, FaGraduationCap, FaDownload } from 'react-icons/fa'
+import { FaMicrosoft, FaCode, FaDatabase, FaCloud, FaUniversity, FaGraduationCap, FaDownload, FaBars, FaTimes } from 'react-icons/fa'
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [formStatus, setFormStatus] = useState({ loading: false, success: false, error: false, message: '' })
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
+      // Close mobile menu on scroll
+      if (isMobileMenuOpen) {
+        setIsMobileMenuOpen(false)
+      }
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isMobileMenuOpen])
+
+  useEffect(() => {
+    // Close mobile menu when clicking outside
+    const handleClickOutside = (e) => {
+      if (isMobileMenuOpen && !e.target.closest('.nav')) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [isMobileMenuOpen])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -79,14 +95,21 @@ function App() {
       <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
         <nav className="nav">
           <div className="nav-brand">Resume</div>
-          <ul className="nav-menu">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#education">Education</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#languages">Languages & Hobbies</a></li>
-            <li><a href="#contact">Contact</a></li>
+          <button 
+            className="mobile-menu-toggle"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+          </button>
+          <ul className={`nav-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+            <li><a href="#home" onClick={() => setIsMobileMenuOpen(false)}>Home</a></li>
+            <li><a href="#about" onClick={() => setIsMobileMenuOpen(false)}>About</a></li>
+            <li><a href="#experience" onClick={() => setIsMobileMenuOpen(false)}>Experience</a></li>
+            <li><a href="#education" onClick={() => setIsMobileMenuOpen(false)}>Education</a></li>
+            <li><a href="#skills" onClick={() => setIsMobileMenuOpen(false)}>Skills</a></li>
+            <li><a href="#languages" onClick={() => setIsMobileMenuOpen(false)}>Languages & Hobbies</a></li>
+            <li><a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</a></li>
           </ul>
         </nav>
       </header>
