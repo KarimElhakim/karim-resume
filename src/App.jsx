@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import emailjs from '@emailjs/browser'
 import './App.css'
 
 function App() {
@@ -14,11 +13,6 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Initialize EmailJS with your public key
-  useEffect(() => {
-    emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY')
-  }, [])
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     setFormStatus({ loading: true, success: false, error: false, message: '' })
@@ -27,67 +21,48 @@ function App() {
     const name = formData.get('name')
     const email = formData.get('email')
     const message = formData.get('message')
-    
-    const data = {
-      from_name: name,
-      from_email: email,
-      message: message,
-      to_email: 'karimali1896@gmail.com'
-    }
 
     try {
-      // Replace these with your EmailJS service ID, template ID, and public key
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID'
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID'
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY'
+      // Using Formspree - easier to set up than EmailJS
+      // Replace this with your Formspree endpoint after signing up at https://formspree.io
+      const formspreeEndpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT || 'https://formspree.io/f/xpwnqgvd'
+      
+      const response = await fetch(formspreeEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          message: message,
+          _subject: `Contact Form Message from ${name}`,
+          _replyto: email,
+        }),
+      })
 
-      // Check if EmailJS is configured
-      if (serviceId === 'YOUR_SERVICE_ID' || templateId === 'YOUR_TEMPLATE_ID' || publicKey === 'YOUR_PUBLIC_KEY') {
-        // Fallback to mailto if EmailJS is not configured
-        const subject = encodeURIComponent(`Contact Form Message from ${name}`)
-        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)
-        window.location.href = `mailto:karimali1896@gmail.com?subject=${subject}&body=${body}`
-        
+      if (response.ok) {
         setFormStatus({ 
           loading: false, 
           success: true, 
           error: false, 
-          message: 'Opening your email client... If it doesn\'t open, please email karimali1896@gmail.com directly.' 
+          message: 'Thank you! Your message has been sent successfully. I will get back to you soon.' 
         })
         e.target.reset()
         
         setTimeout(() => {
           setFormStatus({ loading: false, success: false, error: false, message: '' })
         }, 5000)
-        return
+      } else {
+        throw new Error('Failed to send message')
       }
-
-      await emailjs.send(serviceId, templateId, data, publicKey)
-      
-      setFormStatus({ 
-        loading: false, 
-        success: true, 
-        error: false, 
-        message: 'Thank you! Your message has been sent successfully.' 
-      })
-      e.target.reset()
-      
-      // Clear success message after 5 seconds
-      setTimeout(() => {
-        setFormStatus({ loading: false, success: false, error: false, message: '' })
-      }, 5000)
     } catch (error) {
-      console.error('EmailJS error:', error)
-      // Fallback to mailto on error
-      const subject = encodeURIComponent(`Contact Form Message from ${name}`)
-      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)
-      window.location.href = `mailto:karimali1896@gmail.com?subject=${subject}&body=${body}`
-      
+      console.error('Form submission error:', error)
       setFormStatus({ 
         loading: false, 
-        success: true, 
-        error: false, 
-        message: 'Opening your email client as a fallback. Please send the email manually.' 
+        success: false, 
+        error: true, 
+        message: 'Sorry, there was an error sending your message. Please email me directly at karimali1896@gmail.com' 
       })
     }
   }
