@@ -24,10 +24,14 @@ function App() {
     setFormStatus({ loading: true, success: false, error: false, message: '' })
 
     const formData = new FormData(e.target)
+    const name = formData.get('name')
+    const email = formData.get('email')
+    const message = formData.get('message')
+    
     const data = {
-      from_name: formData.get('name'),
-      from_email: formData.get('email'),
-      message: formData.get('message'),
+      from_name: name,
+      from_email: email,
+      message: message,
       to_email: 'karimali1896@gmail.com'
     }
 
@@ -39,7 +43,23 @@ function App() {
 
       // Check if EmailJS is configured
       if (serviceId === 'YOUR_SERVICE_ID' || templateId === 'YOUR_TEMPLATE_ID' || publicKey === 'YOUR_PUBLIC_KEY') {
-        throw new Error('EmailJS is not configured. Please set up EmailJS credentials.')
+        // Fallback to mailto if EmailJS is not configured
+        const subject = encodeURIComponent(`Contact Form Message from ${name}`)
+        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)
+        window.location.href = `mailto:karimali1896@gmail.com?subject=${subject}&body=${body}`
+        
+        setFormStatus({ 
+          loading: false, 
+          success: true, 
+          error: false, 
+          message: 'Opening your email client... If it doesn\'t open, please email karimali1896@gmail.com directly.' 
+        })
+        e.target.reset()
+        
+        setTimeout(() => {
+          setFormStatus({ loading: false, success: false, error: false, message: '' })
+        }, 5000)
+        return
       }
 
       await emailjs.send(serviceId, templateId, data, publicKey)
@@ -58,11 +78,16 @@ function App() {
       }, 5000)
     } catch (error) {
       console.error('EmailJS error:', error)
+      // Fallback to mailto on error
+      const subject = encodeURIComponent(`Contact Form Message from ${name}`)
+      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)
+      window.location.href = `mailto:karimali1896@gmail.com?subject=${subject}&body=${body}`
+      
       setFormStatus({ 
         loading: false, 
-        success: false, 
-        error: true, 
-        message: 'Sorry, there was an error sending your message. Please try again or email me directly at karimali1896@gmail.com' 
+        success: true, 
+        error: false, 
+        message: 'Opening your email client as a fallback. Please send the email manually.' 
       })
     }
   }
