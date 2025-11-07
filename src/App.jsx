@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import { 
+  SiCsharp, SiDotnet, SiMicrosoft, SiMicrosoftsqlserver, SiPostgresql, SiMongodb,
+  SiGit, SiDocker, SiMicrosoftazure, SiJest, SiWebpack, SiVite, SiLinux,
+  SiSharepoint, SiServicenow, SiJson, SiNodedotjs, SiExpress, SiPython, SiDjango,
+  SiReact, SiJavascript, SiTypescript, SiHtml5, SiCss3, SiSass, SiTailwindcss
+} from 'react-icons/si'
+import { FaUniversity, FaGraduationCap } from 'react-icons/fa'
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -147,7 +154,10 @@ function App() {
             <div className="timeline-item">
               <div className="timeline-marker"></div>
               <div className="timeline-content">
-                <h3>Senior Software Engineer</h3>
+                <div className="company-header">
+                  <h3>Senior Software Engineer</h3>
+                  <img src="https://www.itworx.com/wp-content/uploads/2021/06/ITWORX-Logo.png" alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
+                </div>
                 <h4>ITWORX | 2023 - 2024</h4>
                 <p>
                   Worked on improving backend features in .NET and SQL Server applications, helping make 
@@ -163,7 +173,10 @@ function App() {
             <div className="timeline-item">
               <div className="timeline-marker"></div>
               <div className="timeline-content">
-                <h3>Software Support Specialist</h3>
+                <div className="company-header">
+                  <h3>Software Support Specialist</h3>
+                  <img src="https://www.itworx.com/wp-content/uploads/2021/06/ITWORX-Logo.png" alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
+                </div>
                 <h4>ITWORX | 2020 - 2023</h4>
                 <p>
                   Supported AgilePoint and other internal applications, helping users resolve issues quickly 
@@ -179,7 +192,10 @@ function App() {
             <div className="timeline-item">
               <div className="timeline-marker"></div>
               <div className="timeline-content">
-                <h3>Application Support Specialist</h3>
+                <div className="company-header">
+                  <h3>Application Support Specialist</h3>
+                  <img src="https://www.itworx.com/wp-content/uploads/2021/06/ITWORX-Logo.png" alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
+                </div>
                 <h4>ITWORX | 2019 - 2020</h4>
                 <p>
                   Handled user tickets and technical requests, making sure issues were understood clearly 
@@ -201,8 +217,13 @@ function App() {
           <h2 className="section-title">Education</h2>
           <div className="education-grid">
             <div className="education-card">
-              <h3>Master's in Artificial Intelligence</h3>
-              <h4>University of the West of England (UWE Bristol), UK | Completed: September 2025</h4>
+              <div className="education-header">
+                <img src="https://www.uwe.ac.uk/-/media/uwe/images/logo/uwe-logo.svg" alt="UWE Bristol Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none' }} />
+                <div>
+                  <h3>Master's in Artificial Intelligence</h3>
+                  <h4>University of the West of England (UWE Bristol), UK | Completed: September 2025</h4>
+                </div>
+              </div>
               <p>
                 Focus areas: Machine Learning, Data Engineering, Applied AI Systems. 
                 Relevant work: Backend integration of AI models, optimization, and automation.
@@ -218,8 +239,13 @@ function App() {
               </a>
             </div>
             <div className="education-card">
-              <h3>Bachelor of Engineering in Mechatronics</h3>
-              <h4>Arab Academy for Science and Technology (AAST), Cairo, Egypt | Graduated: 2018</h4>
+              <div className="education-header">
+                <img src="https://www.aast.edu/en/images/logo.png" alt="AAST Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none' }} />
+                <div>
+                  <h3>Bachelor of Engineering in Mechatronics</h3>
+                  <h4>Arab Academy for Science and Technology (AAST), Cairo, Egypt | Graduated: 2018</h4>
+                </div>
+              </div>
               <p>
                 Coursework in programming, control systems, and embedded technologies.
               </p>
@@ -236,65 +262,65 @@ function App() {
             <div className="skill-category">
               <h3>Languages & Frameworks</h3>
               <div className="skill-items">
-                <span className="skill-tag">C#</span>
-                <span className="skill-tag">.NET Core</span>
-                <span className="skill-tag">.NET 5/6/7</span>
-                <span className="skill-tag">ASP.NET</span>
-                <span className="skill-tag">ASP.NET Core</span>
-                <span className="skill-tag">Web API</span>
-                <span className="skill-tag">REST</span>
+                <span className="skill-tag"><SiCsharp className="skill-icon" /> C#</span>
+                <span className="skill-tag"><SiDotnet className="skill-icon" /> .NET Core</span>
+                <span className="skill-tag"><SiDotnet className="skill-icon" /> .NET 5/6/7</span>
+                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> ASP.NET</span>
+                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> ASP.NET Core</span>
+                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> Web API</span>
+                <span className="skill-tag"><SiNodedotjs className="skill-icon" /> REST</span>
               </div>
             </div>
             <div className="skill-category">
               <h3>Data & Persistence</h3>
               <div className="skill-items">
-                <span className="skill-tag">SQL Server</span>
-                <span className="skill-tag">T-SQL</span>
-                <span className="skill-tag">Entity Framework</span>
-                <span className="skill-tag">LINQ</span>
-                <span className="skill-tag">PostgreSQL</span>
-                <span className="skill-tag">MongoDB</span>
+                <span className="skill-tag"><SiMicrosoftsqlserver className="skill-icon" /> SQL Server</span>
+                <span className="skill-tag"><SiMicrosoftsqlserver className="skill-icon" /> T-SQL</span>
+                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> Entity Framework</span>
+                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> LINQ</span>
+                <span className="skill-tag"><SiPostgresql className="skill-icon" /> PostgreSQL</span>
+                <span className="skill-tag"><SiMongodb className="skill-icon" /> MongoDB</span>
               </div>
             </div>
             <div className="skill-category">
               <h3>Tools & Dev Workflow</h3>
               <div className="skill-items">
-                <span className="skill-tag">Git</span>
-                <span className="skill-tag">Azure DevOps</span>
-                <span className="skill-tag">CI/CD</span>
-                <span className="skill-tag">Docker</span>
-                <span className="skill-tag">Visual Studio</span>
+                <span className="skill-tag"><SiGit className="skill-icon" /> Git</span>
+                <span className="skill-tag"><SiMicrosoftazure className="skill-icon" /> Azure DevOps</span>
+                <span className="skill-tag"><SiGit className="skill-icon" /> CI/CD</span>
+                <span className="skill-tag"><SiDocker className="skill-icon" /> Docker</span>
+                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> Visual Studio</span>
               </div>
             </div>
             <div className="skill-category">
               <h3>Cloud & Monitoring</h3>
               <div className="skill-items">
-                <span className="skill-tag">Azure App Services</span>
-                <span className="skill-tag">Azure Functions</span>
-                <span className="skill-tag">Azure Storage</span>
-                <span className="skill-tag">Application Insights</span>
+                <span className="skill-tag"><SiMicrosoftazure className="skill-icon" /> Azure App Services</span>
+                <span className="skill-tag"><SiMicrosoftazure className="skill-icon" /> Azure Functions</span>
+                <span className="skill-tag"><SiMicrosoftazure className="skill-icon" /> Azure Storage</span>
+                <span className="skill-tag"><SiMicrosoftazure className="skill-icon" /> Application Insights</span>
               </div>
             </div>
             <div className="skill-category">
               <h3>Integrations & Platforms</h3>
               <div className="skill-items">
-                <span className="skill-tag">SharePoint</span>
-                <span className="skill-tag">ServiceNow</span>
-                <span className="skill-tag">AgilePoint</span>
-                <span className="skill-tag">REST Integrations</span>
-                <span className="skill-tag">JSON</span>
-                <span className="skill-tag">SOAP</span>
+                <span className="skill-tag"><SiSharepoint className="skill-icon" /> SharePoint</span>
+                <span className="skill-tag"><SiServicenow className="skill-icon" /> ServiceNow</span>
+                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> AgilePoint</span>
+                <span className="skill-tag"><SiNodedotjs className="skill-icon" /> REST Integrations</span>
+                <span className="skill-tag"><SiJson className="skill-icon" /> JSON</span>
+                <span className="skill-tag"><SiJson className="skill-icon" /> SOAP</span>
               </div>
             </div>
             <div className="skill-category">
               <h3>Testing & Quality</h3>
               <div className="skill-items">
-                <span className="skill-tag">Unit Testing</span>
-                <span className="skill-tag">xUnit</span>
-                <span className="skill-tag">NUnit</span>
-                <span className="skill-tag">Debugging</span>
-                <span className="skill-tag">Serilog</span>
-                <span className="skill-tag">Agile/Scrum</span>
+                <span className="skill-tag"><SiJest className="skill-icon" /> Unit Testing</span>
+                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> xUnit</span>
+                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> NUnit</span>
+                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> Debugging</span>
+                <span className="skill-tag"><SiMicrosoft className="skill-icon" /> Serilog</span>
+                <span className="skill-tag"><SiGit className="skill-icon" /> Agile/Scrum</span>
               </div>
             </div>
           </div>
