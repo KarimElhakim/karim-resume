@@ -240,7 +240,7 @@ function App() {
             </div>
             <div className="education-card">
               <div className="education-header">
-                <img src="https://www.aast.edu/en/images/logo.png" alt="AAST Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none'; e.target.src = 'https://via.placeholder.com/120x60/006633/FFFFFF?text=AAST' }} />
+                <img src="/aast-logo.png" alt="AAST Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none' }} />
                 <div>
                   <h3>Bachelor of Engineering in Mechatronics</h3>
                   <h4>Arab Academy for Science and Technology (AAST), Cairo, Egypt | Graduated: 2018</h4>
