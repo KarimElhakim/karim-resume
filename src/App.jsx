@@ -12,6 +12,7 @@ function App() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [formStatus, setFormStatus] = useState({ loading: false, success: false, error: false, message: '' })
+  const [expandedCategory, setExpandedCategory] = useState(null)
   const cursorTrailRef = useRef([])
   const cursorRef = useRef(null)
 
@@ -288,45 +289,98 @@ function App() {
         <div className="container">
           <h2 className="section-title">How I Solve Your Development Challenges</h2>
           
-          <div className="challenge-category">
-            <h3 className="challenge-category-title">Backend Development</h3>
-            <ul className="challenge-list">
-              <li>Built scalable .NET Core applications with clean architecture and SOLID principles</li>
-              <li>Developed RESTful APIs using ASP.NET Core Web API for enterprise applications</li>
-              <li>Optimized SQL Server databases with efficient T-SQL queries and Entity Framework Core</li>
-              <li>Implemented robust error handling, logging, and monitoring using Serilog and Application Insights</li>
-              <li>Designed and maintained microservices architecture with Docker containerization</li>
-            </ul>
-          </div>
-
-          <div className="challenge-category">
-            <h3 className="challenge-category-title">Enterprise Integration & Support</h3>
-            <ul className="challenge-list">
-              <li>Integrated applications with SharePoint, ServiceNow, and AgilePoint for seamless workflow automation</li>
-              <li>Resolved complex production issues by analyzing logs, testing fixes, and coordinating with QA teams</li>
-              <li>Supported SharePoint migrations, ensuring content and access moved correctly</li>
-              <li>Created comprehensive documentation and training materials for development teams</li>
-              <li>Participated in sprint planning and code reviews to improve codebase quality</li>
-            </ul>
-          </div>
-
-          <div className="challenge-category">
-            <h3 className="challenge-category-title">Cloud & DevOps</h3>
-            <ul className="challenge-list">
-              <li>Deployed applications to Azure App Services and Azure Functions</li>
-              <li>Set up CI/CD pipelines using Azure DevOps for automated builds and deployments</li>
-              <li>Managed containerized services with Docker for consistent development and production environments</li>
-              <li>Configured Azure Storage and Application Insights for monitoring and analytics</li>
-            </ul>
-          </div>
-
-          <div className="challenge-category">
-            <h3 className="challenge-category-title">AI & Machine Learning</h3>
-            <ul className="challenge-list">
-              <li>Completed Master's in Artificial Intelligence with focus on Machine Learning and Data Engineering</li>
-              <li>Applied AI techniques for backend integration and automation</li>
-              <li>Worked on optimization and automation using AI models</li>
-            </ul>
+          <div className="challenges-accordion">
+            {[
+              {
+                title: 'Backend Development',
+                icon: (
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="challenge-icon">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                ),
+                items: [
+                  'Built scalable .NET Core applications with clean architecture and SOLID principles',
+                  'Developed RESTful APIs using ASP.NET Core Web API for enterprise applications',
+                  'Optimized SQL Server databases with efficient T-SQL queries and Entity Framework Core',
+                  'Implemented robust error handling, logging, and monitoring using Serilog and Application Insights',
+                  'Designed and maintained microservices architecture with Docker containerization'
+                ]
+              },
+              {
+                title: 'Enterprise Integration & Support',
+                icon: (
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="challenge-icon">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h4v11H3V10zm7-6h4v17h-4V4zm7 8h4v9h-4v-9z" />
+                  </svg>
+                ),
+                items: [
+                  'Integrated applications with SharePoint, ServiceNow, and AgilePoint for seamless workflow automation',
+                  'Resolved complex production issues by analyzing logs, testing fixes, and coordinating with QA teams',
+                  'Supported SharePoint migrations, ensuring content and access moved correctly',
+                  'Created comprehensive documentation and training materials for development teams',
+                  'Participated in sprint planning and code reviews to improve codebase quality'
+                ]
+              },
+              {
+                title: 'Cloud & DevOps',
+                icon: (
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="challenge-icon">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4h16v16H4V4zm8 8l4-4m-4 4l-4-4m4 4v4" />
+                  </svg>
+                ),
+                items: [
+                  'Deployed applications to Azure App Services and Azure Functions',
+                  'Set up CI/CD pipelines using Azure DevOps for automated builds and deployments',
+                  'Managed containerized services with Docker for consistent development and production environments',
+                  'Configured Azure Storage and Application Insights for monitoring and analytics'
+                ]
+              },
+              {
+                title: 'AI & Machine Learning',
+                icon: (
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="challenge-icon">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                ),
+                items: [
+                  'Completed Master\'s in Artificial Intelligence with focus on Machine Learning and Data Engineering',
+                  'Applied AI techniques for backend integration and automation',
+                  'Worked on optimization and automation using AI models'
+                ]
+              }
+            ].map((category, index) => (
+              <div key={index} className="challenge-item-wrapper">
+                <div 
+                  className="challenge-item"
+                  onClick={() => setExpandedCategory(expandedCategory === category.title ? null : category.title)}
+                >
+                  <div className="challenge-item-header">
+                    {category.icon}
+                    <div className="challenge-item-title-wrapper">
+                      <span className="challenge-item-title">{category.title}</span>
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24" 
+                        fill="currentColor" 
+                        className={`challenge-arrow ${expandedCategory === category.title ? 'expanded' : ''}`}
+                      >
+                        <path d="M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className={`challenge-content ${expandedCategory === category.title ? 'expanded' : ''}`}>
+                    <ul className="challenge-list">
+                      {category.items.map((item, itemIndex) => (
+                        <li key={itemIndex}>
+                          <span className="bullet">•</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

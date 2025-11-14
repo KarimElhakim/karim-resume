@@ -18,6 +18,10 @@
   --border: #2a2a2a;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --sec: #00d4ff;
+  --white: #ffffff;
+  --white-icon: rgba(255, 255, 255, 0.7);
+  --white-icon-tr: rgba(255, 255, 255, 0.1);
 }
 
 body {
@@ -298,54 +302,118 @@ body {
   background: var(--bg-primary);
 }
 
-.challenge-category {
-  margin-bottom: 4rem;
+.challenges-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-.challenge-category:last-child {
-  margin-bottom: 0;
+.challenge-item-wrapper {
+  width: 100%;
 }
 
-.challenge-category-title {
-  font-size: 1.75rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
-  color: var(--text-primary);
+.challenge-item {
+  background: rgba(20, 20, 20, 0.61);
+  border-radius: 1rem;
+  border: 1px solid var(--white-icon-tr);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.challenge-item:hover {
+  background: rgba(20, 20, 20, 0.8);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.challenge-item-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  letter-spacing: -0.5px;
+  gap: 0.75rem;
+  padding: 1rem;
 }
 
-.challenge-category-title::before {
-  content: '•';
-  color: var(--accent);
-  font-size: 2rem;
-  line-height: 1;
+.challenge-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--sec);
+  opacity: 0.7;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.challenge-item:hover .challenge-icon {
+  transform: rotate(6deg) scale(1.1);
+}
+
+.challenge-item-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-grow: 1;
+  gap: 0.5rem;
+}
+
+.challenge-item-title {
+  color: var(--white);
+  font-size: 1.125rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.challenge-arrow {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--white);
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.challenge-arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.challenge-content {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out, opacity 0.3s ease, padding 0.3s ease;
+  padding: 0 1rem;
+}
+
+.challenge-content.expanded {
+  max-height: 500px;
+  opacity: 1;
+  padding: 0 1rem 1rem 1rem;
 }
 
 .challenge-list {
   list-style: none;
-  padding-left: 0;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .challenge-list li {
-  padding-left: 2rem;
-  margin-bottom: 1.25rem;
-  color: var(--text-secondary);
-  line-height: 1.8;
-  position: relative;
-  font-size: 1.05rem;
+  display: flex;
+  align-items: flex-start;
+  color: var(--white-icon);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  padding-left: 0.25rem;
 }
 
-.challenge-list li::before {
-  content: '•';
-  position: absolute;
-  left: 0;
-  color: var(--accent);
-  font-weight: bold;
-  font-size: 1.5rem;
-  line-height: 1;
+.challenge-list .bullet {
+  color: var(--white-icon);
+  padding-right: 0.75rem;
+  flex-shrink: 0;
 }
 
 /* Work Experience Section */
@@ -929,7 +997,19 @@ html {
     font-size: 1.5rem;
   }
 
-  .challenge-category-title {
-    font-size: 1.5rem;
+  .challenge-item-title {
+    font-size: 1rem;
+  }
+
+  .challenge-item-header {
+    padding: 0.875rem;
+  }
+
+  .challenge-content.expanded {
+    padding: 0 0.875rem 0.875rem 0.875rem;
+  }
+
+  .challenges-accordion {
+    gap: 0.75rem;
   }
 }
