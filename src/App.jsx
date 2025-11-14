@@ -4,8 +4,7 @@ import {
   SiDotnet, SiPostgresql, SiMongodb,
   SiGit, SiDocker, SiJest, SiVite, SiLinux,
   SiJson, SiNodedotjs, SiExpress, SiPython, SiDjango,
-  SiReact, SiJavascript, SiTypescript, SiHtml5, SiCss3, SiSass, SiTailwindcss,
-  SiCsharp, SiMicrosoftazure, SiMicrosoftsqlserver
+  SiReact, SiJavascript, SiTypescript, SiHtml5, SiCss3, SiSass, SiTailwindcss
 } from 'react-icons/si'
 import { FaMicrosoft, FaCode, FaDatabase, FaCloud, FaDownload, FaBars, FaTimes } from 'react-icons/fa'
 
@@ -88,7 +87,7 @@ function App() {
   }
 
   const techStack = [
-    { name: 'C#', icon: SiCsharp },
+    { name: 'C#', icon: FaCode },
     { name: '.NET Core', icon: SiDotnet },
     { name: '.NET 5/6/7', icon: SiDotnet },
     { name: 'ASP.NET', icon: FaMicrosoft },
