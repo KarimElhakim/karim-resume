@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { 
   SiDotnet, SiPostgresql, SiMongodb,
@@ -12,6 +12,114 @@ function App() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [formStatus, setFormStatus] = useState({ loading: false, success: false, error: false, message: '' })
+  const cursorTrailRef = useRef([])
+  const cursorRef = useRef(null)
+
+  // Custom cursor and trail effect
+  useEffect(() => {
+    const cursor = document.createElement('div')
+    cursor.className = 'custom-cursor'
+    cursor.style.cssText = `
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, opacity 0.2s;
+      opacity: 0;
+    `
+    document.body.appendChild(cursor)
+    cursorRef.current = cursor
+
+    const createTrail = (e) => {
+      const trail = document.createElement('div')
+      trail.className = 'cursor-trail'
+      trail.style.left = e.clientX + 'px'
+      trail.style.top = e.clientY + 'px'
+      document.body.appendChild(trail)
+
+      cursorTrailRef.current.push(trail)
+
+      // Update custom cursor position
+      if (cursorRef.current) {
+        cursorRef.current.style.left = e.clientX + 'px'
+        cursorRef.current.style.top = e.clientY + 'px'
+        cursorRef.current.style.opacity = '1'
+      }
+
+      // Remove old trails if too many
+      if (cursorTrailRef.current.length > 20) {
+        const oldTrail = cursorTrailRef.current.shift()
+        if (oldTrail && oldTrail.parentNode) {
+          oldTrail.parentNode.removeChild(oldTrail)
+        }
+      }
+
+      // Remove trail after animation
+      setTimeout(() => {
+        if (trail.parentNode) {
+          trail.parentNode.removeChild(trail)
+        }
+        cursorTrailRef.current = cursorTrailRef.current.filter(t => t !== trail)
+      }, 1000)
+    }
+
+    const handleMouseMove = (e) => {
+      createTrail(e)
+    }
+
+    const handleMouseLeave = () => {
+      if (cursorRef.current) {
+        cursorRef.current.style.opacity = '0'
+      }
+    }
+
+    const handleMouseEnter = () => {
+      if (cursorRef.current) {
+        cursorRef.current.style.opacity = '1'
+      }
+    }
+
+    const handleLinkHover = (e) => {
+      if (cursorRef.current) {
+        cursorRef.current.style.width = '30px'
+        cursorRef.current.style.height = '30px'
+      }
+    }
+
+    const handleLinkLeave = () => {
+      if (cursorRef.current) {
+        cursorRef.current.style.width = '20px'
+        cursorRef.current.style.height = '20px'
+      }
+    }
+
+    const links = document.querySelectorAll('a, button, .tech-item')
+    links.forEach(link => {
+      link.addEventListener('mouseenter', handleLinkHover)
+      link.addEventListener('mouseleave', handleLinkLeave)
+    })
+
+    window.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseleave', handleMouseLeave)
+    document.addEventListener('mouseenter', handleMouseEnter)
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseleave', handleMouseLeave)
+      document.removeEventListener('mouseenter', handleMouseEnter)
+      links.forEach(link => {
+        link.removeEventListener('mouseenter', handleLinkHover)
+        link.removeEventListener('mouseleave', handleLinkLeave)
+      })
+      if (cursorRef.current && cursorRef.current.parentNode) {
+        cursorRef.current.parentNode.removeChild(cursorRef.current)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -226,7 +334,7 @@ function App() {
       {/* Work Experience */}
       <section className="work-experience-section">
         <div className="container">
-          <h2 className="section-title">My Work</h2>
+          <h2 className="section-title">My work</h2>
           
           <div className="work-item">
             <div className="work-header">
