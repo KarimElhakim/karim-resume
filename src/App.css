@@ -52,8 +52,8 @@ body {
   overflow-x: hidden;
 }
 
-/* Splash Cursor Canvas */
-.splash-cursor {
+/* Splash Cursor Canvas - WebGL Fluid Simulation */
+#fluid {
   pointer-events: none;
   mix-blend-mode: screen;
 }
