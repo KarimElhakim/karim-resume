@@ -10,6 +10,7 @@ function App() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [formStatus, setFormStatus] = useState({ loading: false, success: false, error: false, message: '' })
+  const [expandedCategory, setExpandedCategory] = useState(null)
   const cursorTrailRef = useRef([])
   const cursorRef = useRef(null)
   const mousePosRef = useRef({ x: 0, y: 0 })
