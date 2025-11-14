@@ -1,12 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
-import { 
-  SiDotnet, SiPostgresql, SiMongodb,
-  SiGit, SiDocker, SiJest, SiVite, SiLinux,
-  SiJson, SiNodedotjs, SiExpress, SiPython, SiDjango,
-  SiReact, SiJavascript, SiTypescript, SiHtml5, SiCss3, SiSass, SiTailwindcss
-} from 'react-icons/si'
-import { FaMicrosoft, FaCode, FaDatabase, FaCloud, FaDownload, FaBars, FaTimes } from 'react-icons/fa'
+import { FaDownload, FaBars, FaTimes, FaGraduationCap } from 'react-icons/fa'
+import AnimatedHero from './components/AnimatedHero'
+import TechStackCarousel from './components/TechStackCarousel'
+import ExperienceCarousel from './components/ExperienceCarousel'
+import GitHubProjects from './components/GitHubProjects'
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -36,36 +34,56 @@ function App() {
     cursorRef.current = cursor
 
     const createTrail = (e) => {
-      const trail = document.createElement('div')
-      trail.className = 'cursor-trail'
-      trail.style.left = e.clientX + 'px'
-      trail.style.top = e.clientY + 'px'
-      document.body.appendChild(trail)
+      // Create multiple fluid particles with hue shifts
+      for (let i = 0; i < 3; i++) {
+        const trail = document.createElement('div')
+        trail.className = 'cursor-trail'
+        const hue = (Date.now() * 0.1 + i * 30) % 360
+        const size = 8 + i * 2
+        trail.style.cssText = `
+          position: fixed;
+          left: ${e.clientX}px;
+          top: ${e.clientY}px;
+          width: ${size}px;
+          height: ${size}px;
+          background: hsla(${hue}, 100%, 60%, 0.6);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 9998;
+          transform: translate(-50%, -50%);
+          box-shadow: 0 0 ${size * 2}px hsla(${hue}, 100%, 60%, 0.8);
+          animation: fluidFade 1.5s ease-out forwards;
+        `
+        document.body.appendChild(trail)
 
-      cursorTrailRef.current.push(trail)
+        cursorTrailRef.current.push(trail)
 
-      // Update custom cursor position
+        // Remove trail after animation
+        setTimeout(() => {
+          if (trail.parentNode) {
+            trail.parentNode.removeChild(trail)
+          }
+          cursorTrailRef.current = cursorTrailRef.current.filter(t => t !== trail)
+        }, 1500)
+      }
+
+      // Update custom cursor position with hue shift
       if (cursorRef.current) {
+        const hue = (Date.now() * 0.1) % 360
         cursorRef.current.style.left = e.clientX + 'px'
         cursorRef.current.style.top = e.clientY + 'px'
         cursorRef.current.style.opacity = '1'
+        cursorRef.current.style.borderColor = `hsl(${hue}, 100%, 60%)`
+        cursorRef.current.style.boxShadow = `0 0 15px hsl(${hue}, 100%, 60%)`
       }
 
       // Remove old trails if too many
-      if (cursorTrailRef.current.length > 20) {
+      if (cursorTrailRef.current.length > 30) {
         const oldTrail = cursorTrailRef.current.shift()
         if (oldTrail && oldTrail.parentNode) {
           oldTrail.parentNode.removeChild(oldTrail)
         }
       }
-
-      // Remove trail after animation
-      setTimeout(() => {
-        if (trail.parentNode) {
-          trail.parentNode.removeChild(trail)
-        }
-        cursorTrailRef.current = cursorTrailRef.current.filter(t => t !== trail)
-      }, 1000)
     }
 
     const handleMouseMove = (e) => {
@@ -195,42 +213,6 @@ function App() {
     }
   }
 
-  const techStack = [
-    { name: 'C#', icon: FaCode },
-    { name: '.NET Core', icon: SiDotnet },
-    { name: '.NET 5/6/7', icon: SiDotnet },
-    { name: 'ASP.NET', icon: FaMicrosoft },
-    { name: 'ASP.NET Core', icon: FaMicrosoft },
-    { name: 'Web API', icon: FaMicrosoft },
-    { name: 'REST', icon: SiNodedotjs },
-    { name: 'SQL Server', icon: FaDatabase },
-    { name: 'T-SQL', icon: FaDatabase },
-    { name: 'Entity Framework', icon: FaMicrosoft },
-    { name: 'LINQ', icon: FaMicrosoft },
-    { name: 'PostgreSQL', icon: SiPostgresql },
-    { name: 'MongoDB', icon: SiMongodb },
-    { name: 'Git', icon: SiGit },
-    { name: 'Azure DevOps', icon: FaCloud },
-    { name: 'CI/CD', icon: SiGit },
-    { name: 'Docker', icon: SiDocker },
-    { name: 'Visual Studio', icon: FaMicrosoft },
-    { name: 'Azure App Services', icon: FaCloud },
-    { name: 'Azure Functions', icon: FaCloud },
-    { name: 'Azure Storage', icon: FaCloud },
-    { name: 'Application Insights', icon: FaCloud },
-    { name: 'SharePoint', icon: FaMicrosoft },
-    { name: 'ServiceNow', icon: FaCloud },
-    { name: 'AgilePoint', icon: FaMicrosoft },
-    { name: 'REST Integrations', icon: SiNodedotjs },
-    { name: 'JSON', icon: SiJson },
-    { name: 'SOAP', icon: SiJson },
-    { name: 'Unit Testing', icon: SiJest },
-    { name: 'xUnit', icon: FaMicrosoft },
-    { name: 'NUnit', icon: FaMicrosoft },
-    { name: 'Debugging', icon: FaCode },
-    { name: 'Serilog', icon: FaMicrosoft },
-    { name: 'Agile/Scrum', icon: SiGit },
-  ]
 
   return (
     <div className="App">
@@ -257,12 +239,15 @@ function App() {
 
       {/* Hero Section */}
       <section id="home" className="hero">
-        <div className="hero-content">
-          <h1 className="hero-title">Hi, I'm Karim Elhakim</h1>
-          <h2 className="hero-subtitle">Software Engineer & AI Specialist</h2>
-          <p className="hero-description">
-            Software Engineer | Backend Developer | AI Specialist | B.Sc. Mechatronics Engineering | M.Sc. Artificial Intelligence
-          </p>
+        <AnimatedHero />
+        <div className="hero-download">
+          <a 
+            href={`${import.meta.env.BASE_URL}${encodeURIComponent('Karim Elhakim Resume (EG).pdf')}`} 
+            download="Karim Elhakim Resume.pdf"
+            className="download-button"
+          >
+            <FaDownload className="button-icon" /> Download Resume PDF
+          </a>
         </div>
       </section>
 
@@ -270,17 +255,7 @@ function App() {
       <section className="tech-stack-section">
         <div className="container">
           <h2 className="section-title">My Full Tech Stack</h2>
-          <div className="tech-stack-grid">
-            {techStack.map((tech, index) => {
-              const IconComponent = tech.icon
-              return (
-                <div key={index} className="tech-item">
-                  <IconComponent className="tech-icon" />
-                  <span className="tech-name">{tech.name}</span>
-                </div>
-              )
-            })}
-          </div>
+          <TechStackCarousel />
         </div>
       </section>
 
@@ -288,8 +263,9 @@ function App() {
       <section id="experience" className="challenges-section">
         <div className="container">
           <h2 className="section-title">How I Solve Your Development Challenges</h2>
+          <ExperienceCarousel />
           
-          <div className="challenges-accordion">
+          <div className="challenges-accordion" style={{ display: 'none' }}>
             {[
               {
                 title: 'Backend Development',
@@ -455,7 +431,7 @@ function App() {
           
           <div className="education-item">
             <div className="education-header">
-              <img src={`${import.meta.env.BASE_URL}uwe-logo.svg`} alt="UWE Bristol Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none' }} />
+              <FaGraduationCap className="university-icon" />
               <div>
                 <h3 className="education-degree">Master's in Artificial Intelligence</h3>
                 <h4 className="education-institution">University of the West of England (UWE Bristol), UK | Completed: September 2025</h4>
@@ -496,15 +472,6 @@ function App() {
             </a>
           </div>
 
-          <div className="resume-download">
-            <a 
-              href={`${import.meta.env.BASE_URL}${encodeURIComponent('Karim Elhakim Resume (EG).pdf')}`} 
-              download="Karim Elhakim Resume.pdf"
-              className="download-button"
-            >
-              <FaDownload className="button-icon" /> Download Resume PDF
-            </a>
-          </div>
         </div>
       </section>
 
@@ -512,11 +479,7 @@ function App() {
       <section id="projects" className="projects-section">
         <div className="container">
           <h2 className="section-title">Projects</h2>
-          <div className="projects-grid">
-            <div className="project-placeholder">
-              <p>Projects coming soon...</p>
-            </div>
-          </div>
+          <GitHubProjects />
         </div>
       </section>
 
