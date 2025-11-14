@@ -12,132 +12,6 @@ function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [formStatus, setFormStatus] = useState({ loading: false, success: false, error: false, message: '' })
   const [expandedCategory, setExpandedCategory] = useState(null)
-  const cursorTrailRef = useRef([])
-  const cursorRef = useRef(null)
-  const mousePosRef = useRef({ x: 0, y: 0 })
-  const animationFrameRef = useRef(null)
-
-  // Smooth cursor with fluid propagation effect
-  useEffect(() => {
-    const cursor = document.createElement('div')
-    cursor.className = 'custom-cursor'
-    cursor.style.cssText = `
-      position: fixed;
-      width: 6px;
-      height: 6px;
-      background: var(--accent);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    `
-    document.body.appendChild(cursor)
-    cursorRef.current = cursor
-
-    let lastTime = 0
-    const trailLength = 15
-
-    const animate = (currentTime) => {
-      if (!cursorRef.current) return
-
-      const deltaTime = currentTime - lastTime
-      lastTime = currentTime
-
-      // Update cursor position smoothly
-      if (cursorRef.current) {
-        const { x, y } = mousePosRef.current
-        cursorRef.current.style.left = x + 'px'
-        cursorRef.current.style.top = y + 'px'
-        cursorRef.current.style.opacity = '1'
-      }
-
-      // Create fluid trail particles
-      if (deltaTime > 16) { // ~60fps
-        const trail = document.createElement('div')
-        trail.className = 'cursor-trail'
-        const hue = (Date.now() * 0.05) % 360
-        trail.style.cssText = `
-          position: fixed;
-          left: ${mousePosRef.current.x}px;
-          top: ${mousePosRef.current.y}px;
-          width: 8px;
-          height: 8px;
-          background: hsla(${hue}, 100%, 60%, 0.8);
-          border-radius: 50%;
-          pointer-events: none;
-          z-index: 9998;
-          transform: translate(-50%, -50%);
-          box-shadow: 0 0 12px hsla(${hue}, 100%, 60%, 0.9);
-        `
-        document.body.appendChild(trail)
-        cursorTrailRef.current.push(trail)
-
-        // Animate trail particles
-        let opacity = 0.8
-        let scale = 1
-        const fadeInterval = setInterval(() => {
-          opacity -= 0.05
-          scale += 0.1
-          trail.style.opacity = opacity
-          trail.style.transform = `translate(-50%, -50%) scale(${scale})`
-          
-          if (opacity <= 0) {
-            clearInterval(fadeInterval)
-            if (trail.parentNode) {
-              trail.parentNode.removeChild(trail)
-            }
-            cursorTrailRef.current = cursorTrailRef.current.filter(t => t !== trail)
-          }
-        }, 16)
-
-        // Remove old trails
-        if (cursorTrailRef.current.length > trailLength) {
-          const oldTrail = cursorTrailRef.current.shift()
-          if (oldTrail && oldTrail.parentNode) {
-            oldTrail.parentNode.removeChild(oldTrail)
-          }
-        }
-      }
-
-      animationFrameRef.current = requestAnimationFrame(animate)
-    }
-
-    const handleMouseMove = (e) => {
-      mousePosRef.current = { x: e.clientX, y: e.clientY }
-    }
-
-    const handleMouseLeave = () => {
-      if (cursorRef.current) {
-        cursorRef.current.style.opacity = '0'
-      }
-    }
-
-    const handleMouseEnter = () => {
-      if (cursorRef.current) {
-        cursorRef.current.style.opacity = '1'
-      }
-    }
-
-    window.addEventListener('mousemove', handleMouseMove, { passive: true })
-    document.addEventListener('mouseleave', handleMouseLeave)
-    document.addEventListener('mouseenter', handleMouseEnter)
-
-    animationFrameRef.current = requestAnimationFrame(animate)
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseleave', handleMouseLeave)
-      document.removeEventListener('mouseenter', handleMouseEnter)
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current)
-      }
-      if (cursorRef.current && cursorRef.current.parentNode) {
-        cursorRef.current.parentNode.removeChild(cursorRef.current)
-      }
-    }
-  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -365,7 +239,7 @@ function App() {
                 <h3 className="work-title">Senior Software Engineer</h3>
                 <h4 className="work-company">ITWORX | 2023 - 2024</h4>
               </div>
-              <img src="/itworx-logo.png" alt="ITWORX Logo" className="company-logo" />
+              <img src={`${import.meta.env.BASE_URL}itworx-logo.png`} alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
             </div>
             <p className="work-description">
               Worked on improving backend features in .NET and SQL Server applications, helping make 
@@ -384,7 +258,7 @@ function App() {
                 <h3 className="work-title">Software Support Specialist</h3>
                 <h4 className="work-company">ITWORX | 2020 - 2023</h4>
               </div>
-              <img src="/itworx-logo.png" alt="ITWORX Logo" className="company-logo" />
+              <img src={`${import.meta.env.BASE_URL}itworx-logo.png`} alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
             </div>
             <p className="work-description">
               Supported AgilePoint and other internal applications, helping users resolve issues quickly 
@@ -403,7 +277,7 @@ function App() {
                 <h3 className="work-title">Application Support Specialist</h3>
                 <h4 className="work-company">ITWORX | 2019 - 2020</h4>
               </div>
-              <img src="/itworx-logo.png" alt="ITWORX Logo" className="company-logo" />
+              <img src={`${import.meta.env.BASE_URL}itworx-logo.png`} alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
             </div>
             <p className="work-description">
               Handled user tickets and technical requests, making sure issues were understood clearly 
@@ -424,7 +298,7 @@ function App() {
           
           <div className="education-item">
             <div className="education-header">
-              <img src="/uwe-logo.png" alt="UWE Bristol Logo" className="university-logo" onError={(e) => { e.target.src = '/uwe-logo.svg' }} />
+              <img src={`${import.meta.env.BASE_URL}uwe-logo.png`} alt="UWE Bristol Logo" className="university-logo" onError={(e) => { e.target.src = `${import.meta.env.BASE_URL}uwe-logo.svg` }} />
               <div>
                 <h3 className="education-degree">Master's in Artificial Intelligence</h3>
                 <h4 className="education-institution">University of the West of England (UWE Bristol), UK | Completed: September 2025</h4>
@@ -446,7 +320,7 @@ function App() {
 
           <div className="education-item">
             <div className="education-header">
-              <img src="/aast-logo.png" alt="AAST Logo" className="university-logo" />
+              <img src={`${import.meta.env.BASE_URL}aast-logo.png`} alt="AAST Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none' }} />
               <div>
                 <h3 className="education-degree">Bachelor of Engineering in Mechatronics</h3>
                 <h4 className="education-institution">Arab Academy for Science and Technology (AAST), Cairo, Egypt | Graduated: 2018</h4>

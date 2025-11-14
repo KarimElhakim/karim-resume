@@ -6,6 +6,7 @@ const SplashCursor = () => {
   const particlesRef = useRef([])
   const mouseRef = useRef({ x: 0, y: 0 })
   const lastMouseRef = useRef({ x: 0, y: 0 })
+  const velocityRef = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -22,35 +23,44 @@ const SplashCursor = () => {
     resizeCanvas()
     window.addEventListener('resize', resizeCanvas)
 
-    // Particle class
+    // Particle class for splash effect
     class Particle {
-      constructor(x, y) {
+      constructor(x, y, vx = 0, vy = 0) {
         this.x = x
         this.y = y
-        this.size = Math.random() * 3 + 1
-        this.speedX = (Math.random() - 0.5) * 2
-        this.speedY = (Math.random() - 0.5) * 2
+        this.vx = vx + (Math.random() - 0.5) * 2
+        this.vy = vy + (Math.random() - 0.5) * 2
+        this.size = Math.random() * 4 + 2
         this.life = 1
-        this.decay = Math.random() * 0.02 + 0.01
-        this.hue = (Date.now() * 0.1) % 360
+        this.decay = Math.random() * 0.03 + 0.02
+        this.hue = (Date.now() * 0.1 + Math.random() * 60) % 360
+        this.gravity = 0.1
       }
 
       update() {
-        this.x += this.speedX
-        this.y += this.speedY
+        this.x += this.vx
+        this.y += this.vy
+        this.vy += this.gravity
+        this.vx *= 0.98
+        this.vy *= 0.98
         this.life -= this.decay
-        this.size *= 0.98
-        this.hue = (this.hue + 1) % 360
+        this.size *= 0.97
+        this.hue = (this.hue + 2) % 360
       }
 
       draw() {
         ctx.save()
-        ctx.globalAlpha = this.life
-        ctx.fillStyle = `hsl(${this.hue}, 100%, 60%)`
+        ctx.globalAlpha = Math.max(0, this.life)
+        const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size)
+        gradient.addColorStop(0, `hsla(${this.hue}, 100%, 65%, ${this.life})`)
+        gradient.addColorStop(1, `hsla(${this.hue}, 100%, 50%, 0)`)
+        ctx.fillStyle = gradient
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
         ctx.fill()
-        ctx.shadowBlur = 10
+        
+        // Glow effect
+        ctx.shadowBlur = 15
         ctx.shadowColor = `hsl(${this.hue}, 100%, 60%)`
         ctx.fill()
         ctx.restore()
@@ -60,39 +70,47 @@ const SplashCursor = () => {
     // Create splash on mouse move
     const handleMouseMove = (e) => {
       const rect = canvas.getBoundingClientRect()
-      mouseRef.current = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-      }
+      const newX = e.clientX - rect.left
+      const newY = e.clientY - rect.top
 
-      // Create particles on movement
-      const dx = mouseRef.current.x - lastMouseRef.current.x
-      const dy = mouseRef.current.y - lastMouseRef.current.y
+      // Calculate velocity
+      const dx = newX - mouseRef.current.x
+      const dy = newY - mouseRef.current.y
+      velocityRef.current = { x: dx * 0.5, y: dy * 0.5 }
+
+      mouseRef.current = { x: newX, y: newY }
+
+      // Create particles based on movement speed
       const distance = Math.sqrt(dx * dx + dy * dy)
+      const particleCount = Math.min(Math.floor(distance / 3), 8)
 
-      if (distance > 2) {
-        // Create splash particles
-        for (let i = 0; i < Math.min(Math.floor(distance / 2), 5); i++) {
-          particlesRef.current.push(
-            new Particle(
-              mouseRef.current.x + (Math.random() - 0.5) * 10,
-              mouseRef.current.y + (Math.random() - 0.5) * 10
-            )
+      for (let i = 0; i < particleCount; i++) {
+        particlesRef.current.push(
+          new Particle(
+            mouseRef.current.x + (Math.random() - 0.5) * 15,
+            mouseRef.current.y + (Math.random() - 0.5) * 15,
+            velocityRef.current.x,
+            velocityRef.current.y
           )
-        }
-        lastMouseRef.current = { ...mouseRef.current }
+        )
       }
+
+      lastMouseRef.current = { ...mouseRef.current }
     }
 
-    // Create splash on click
+    // Create burst on click
     const handleClick = (e) => {
       const rect = canvas.getBoundingClientRect()
       const x = e.clientX - rect.left
       const y = e.clientY - rect.top
 
       // Create burst of particles
-      for (let i = 0; i < 20; i++) {
-        particlesRef.current.push(new Particle(x, y))
+      for (let i = 0; i < 30; i++) {
+        const angle = (Math.PI * 2 * i) / 30
+        const speed = Math.random() * 5 + 3
+        particlesRef.current.push(
+          new Particle(x, y, Math.cos(angle) * speed, Math.sin(angle) * speed)
+        )
       }
     }
 
@@ -104,7 +122,7 @@ const SplashCursor = () => {
       particlesRef.current = particlesRef.current.filter(particle => {
         particle.update()
         particle.draw()
-        return particle.life > 0
+        return particle.life > 0 && particle.size > 0.1
       })
 
       animationId = requestAnimationFrame(animate)
@@ -144,4 +162,3 @@ const SplashCursor = () => {
 }
 
 export default SplashCursor
-
