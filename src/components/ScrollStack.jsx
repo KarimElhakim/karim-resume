@@ -21,25 +21,59 @@ const ScrollStack = ({ children, className = '' }) => {
       const container = containerRef.current
       const scrollTop = container.scrollTop
       const containerHeight = container.clientHeight
-      const itemHeight = containerHeight / Children.count(children)
+      const scrollCenter = scrollTop + containerHeight / 2
 
-      const newIndex = Math.min(
-        Math.floor(scrollTop / itemHeight),
-        Children.count(children) - 1
-      )
+      // Find which item is closest to the center of the viewport
+      let closestIndex = 0
+      let closestDistance = Infinity
 
-      if (newIndex !== activeIndex) {
-        setActiveIndex(newIndex)
-      }
+      Children.forEach(children, (child, index) => {
+        if (child.type !== ScrollStackItem) return
+        
+        const itemElement = itemsRef.current[index]
+        if (!itemElement) return
+
+        const itemTop = itemElement.offsetTop
+        const itemHeight = itemElement.offsetHeight
+        const itemCenter = itemTop + itemHeight / 2
+
+        const distance = Math.abs(scrollCenter - itemCenter)
+        if (distance < closestDistance) {
+          closestDistance = distance
+          closestIndex = index
+        }
+      })
+
+      setActiveIndex(closestIndex)
     }
 
     const container = containerRef.current
     if (container) {
       container.addEventListener('scroll', handleScroll, { passive: true })
-      handleScroll() // Initial check
-      return () => container.removeEventListener('scroll', handleScroll)
+      
+      // Initial check after DOM is ready
+      const timeoutId = setTimeout(() => {
+        handleScroll()
+      }, 300)
+      
+      // Also check on resize
+      const handleResize = () => {
+        setTimeout(handleScroll, 100)
+      }
+      window.addEventListener('resize', handleResize, { passive: true })
+      
+      return () => {
+        container.removeEventListener('scroll', handleScroll)
+        window.removeEventListener('resize', handleResize)
+        clearTimeout(timeoutId)
+      }
     }
-  }, [children, activeIndex])
+  }, [children])
+
+  // Set initial active index to 0
+  useEffect(() => {
+    setActiveIndex(0)
+  }, [])
 
   return (
     <div className={`scroll-stack ${className}`} ref={containerRef}>
@@ -49,7 +83,9 @@ const ScrollStack = ({ children, className = '' }) => {
         return (
           <div
             key={index}
-            ref={(el) => (itemsRef.current[index] = el)}
+            ref={(el) => {
+              if (el) itemsRef.current[index] = el
+            }}
             className={`scroll-stack-item-wrapper ${index === activeIndex ? 'active' : ''}`}
           >
             {child}
@@ -64,4 +100,3 @@ ScrollStack.Item = ScrollStackItem
 
 export default ScrollStack
 export { ScrollStackItem }
-

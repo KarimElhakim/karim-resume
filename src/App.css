@@ -1673,14 +1673,48 @@ html {
 
   .hero-title-main {
     font-size: 1.75rem;
+    line-height: 1.2;
   }
 
   .hero-subtitle-main {
     font-size: 1.1rem;
+    margin-bottom: 1rem;
   }
 
   .hero-description-main {
     font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .download-button {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .challenges-section .container {
+    height: 80vh;
+    max-height: 600px;
+  }
+
+  .scroll-stack-item-wrapper {
+    min-height: 80vh;
+    padding: 1rem;
+  }
+
+  .scroll-stack-item {
+    padding: 1.5rem;
+  }
+
+  .exp-card-title {
+    font-size: 1.5rem;
+  }
+
+  .exp-card-list {
+    gap: 0.75rem;
+  }
+
+  .exp-card-list li {
+    font-size: 0.9rem;
     line-height: 1.6;
   }
 
