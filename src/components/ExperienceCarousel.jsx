@@ -1,8 +1,12 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 
 const ExperienceCarousel = () => {
   const [currentCard, setCurrentCard] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [scrollLeft, setScrollLeft] = useState(0)
+  const trackRef = useRef(null)
 
   const cards = [
     {
@@ -72,13 +76,123 @@ const ExperienceCarousel = () => {
     setCurrentCard((prev) => (prev - 1 + cards.length) % cards.length)
   }
 
+  // Touch/Drag handlers for mobile
+  const handleTouchStart = (e) => {
+    setIsDragging(true)
+    setStartX(e.touches[0].pageX - (trackRef.current?.offsetLeft || 0))
+    setScrollLeft(trackRef.current?.scrollLeft || 0)
+  }
+
+  const handleTouchMove = (e) => {
+    if (!isDragging) return
+    e.preventDefault()
+    const x = e.touches[0].pageX - (trackRef.current?.offsetLeft || 0)
+    const walk = (x - startX) * 2
+    if (trackRef.current) {
+      trackRef.current.scrollLeft = scrollLeft - walk
+    }
+  }
+
+  const handleTouchEnd = () => {
+    if (!isDragging) return
+    setIsDragging(false)
+    
+    if (trackRef.current) {
+      const cardWidth = trackRef.current.offsetWidth
+      const scrollPosition = trackRef.current.scrollLeft
+      const newIndex = Math.round(scrollPosition / cardWidth)
+      
+      if (newIndex !== currentCard && newIndex >= 0 && newIndex < cards.length) {
+        setCurrentCard(newIndex)
+      }
+    }
+  }
+
+  // Mouse drag handlers for desktop
+  const handleMouseDown = (e) => {
+    if (window.innerWidth <= 768) return
+    setIsDragging(true)
+    setStartX(e.pageX - (trackRef.current?.offsetLeft || 0))
+    setScrollLeft(trackRef.current?.scrollLeft || 0)
+  }
+
+  const handleMouseMove = (e) => {
+    if (!isDragging || window.innerWidth > 768) return
+    e.preventDefault()
+    const x = e.pageX - (trackRef.current?.offsetLeft || 0)
+    const walk = (x - startX) * 2
+    if (trackRef.current) {
+      trackRef.current.scrollLeft = scrollLeft - walk
+    }
+  }
+
+  const handleMouseUp = () => {
+    if (!isDragging) return
+    setIsDragging(false)
+    
+    if (trackRef.current && window.innerWidth <= 768) {
+      const cardWidth = trackRef.current.offsetWidth
+      const scrollPosition = trackRef.current.scrollLeft
+      const newIndex = Math.round(scrollPosition / cardWidth)
+      
+      if (newIndex !== currentCard && newIndex >= 0 && newIndex < cards.length) {
+        setCurrentCard(newIndex)
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (trackRef.current) {
+      trackRef.current.scrollTo({
+        left: currentCard * trackRef.current.offsetWidth,
+        behavior: 'smooth'
+      })
+    }
+  }, [currentCard])
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (track) {
+      track.addEventListener('touchstart', handleTouchStart, { passive: false })
+      track.addEventListener('touchmove', handleTouchMove, { passive: false })
+      track.addEventListener('touchend', handleTouchEnd)
+      track.addEventListener('mousedown', handleMouseDown)
+      
+      return () => {
+        track.removeEventListener('touchstart', handleTouchStart)
+        track.removeEventListener('touchmove', handleTouchMove)
+        track.removeEventListener('touchend', handleTouchEnd)
+        track.removeEventListener('mousedown', handleMouseDown)
+      }
+    }
+  }, [isDragging, startX, scrollLeft, currentCard])
+
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove)
+        document.removeEventListener('mouseup', handleMouseUp)
+      }
+    }
+  }, [isDragging, startX, scrollLeft, currentCard])
+
   return (
     <div className="experience-carousel">
       <div className="exp-carousel-container">
-        <button className="exp-carousel-btn exp-carousel-btn-left" onClick={prevCard}>
+        <button 
+          className="exp-carousel-btn exp-carousel-btn-left" 
+          onClick={prevCard}
+          aria-label="Previous card"
+        >
           <FaChevronLeft />
         </button>
-        <div className="exp-carousel-track">
+        <div 
+          className="exp-carousel-track"
+          ref={trackRef}
+          style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+        >
           {cards.map((card, index) => (
             <div
               key={index}
@@ -99,7 +213,11 @@ const ExperienceCarousel = () => {
             </div>
           ))}
         </div>
-        <button className="exp-carousel-btn exp-carousel-btn-right" onClick={nextCard}>
+        <button 
+          className="exp-carousel-btn exp-carousel-btn-right" 
+          onClick={nextCard}
+          aria-label="Next card"
+        >
           <FaChevronRight />
         </button>
       </div>
@@ -117,4 +235,3 @@ const ExperienceCarousel = () => {
 }
 
 export default ExperienceCarousel
-

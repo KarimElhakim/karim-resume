@@ -22,9 +22,26 @@ const CardNav = ({
         setActiveIndex(null)
       }
     }
+    
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false)
+        setActiveIndex(null)
+      }
+    }
+    
     document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleEscape)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleEscape)
+    }
   }, [])
+
+  const handleLinkClick = () => {
+    setIsOpen(false)
+    setActiveIndex(null)
+  }
 
   return (
     <nav ref={navRef} className="card-nav">
@@ -54,6 +71,7 @@ const CardNav = ({
               <a
                 href={index === 0 ? '#home' : index === 1 ? '#experience' : '#contact'}
                 className="card-nav-button"
+                onClick={handleLinkClick}
                 style={{
                   backgroundColor: activeIndex === index ? item.bgColor : buttonBgColor,
                   color: activeIndex === index ? item.textColor : buttonTextColor
@@ -83,6 +101,7 @@ const CardNav = ({
                         key={linkIndex}
                         href={href}
                         className="card-nav-link"
+                        onClick={handleLinkClick}
                         aria-label={link.ariaLabel || link.label}
                         target={link.label === 'LinkedIn' || link.label === 'GitHub' ? '_blank' : undefined}
                         rel={link.label === 'LinkedIn' || link.label === 'GitHub' ? 'noopener noreferrer' : undefined}

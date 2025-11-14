@@ -558,9 +558,18 @@ body {
 
 .exp-carousel-track {
   display: flex;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   position: relative;
   min-height: 400px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.exp-carousel-track::-webkit-scrollbar {
+  display: none;
 }
 
 .exp-card {
@@ -574,6 +583,9 @@ body {
   transform: translateX(100%) scale(0.8);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
+  scroll-snap-align: start;
+  user-select: none;
+  flex-shrink: 0;
 }
 
 .exp-card.active {
