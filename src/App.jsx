@@ -89,6 +89,7 @@ function App() {
 
   return (
     <div className="App">
+      <SplashCursor />
       {/* Header/Navigation */}
       <header className="header-glass">
         <nav className="nav-glass">

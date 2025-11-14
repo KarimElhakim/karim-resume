@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useRef } from 'react';
 
 function SplashCursor({
@@ -57,12 +55,6 @@ function SplashCursor({
 
     let pointers = [new pointerPrototype()];
 
-    const { gl, ext } = getWebGLContext(canvas);
-    if (!ext.supportLinearFiltering) {
-      config.DYE_RESOLUTION = 256;
-      config.SHADING = false;
-    }
-
     function getWebGLContext(canvas) {
       const params = {
         alpha: true,
@@ -74,6 +66,20 @@ function SplashCursor({
       let gl = canvas.getContext('webgl2', params);
       const isWebGL2 = !!gl;
       if (!isWebGL2) gl = canvas.getContext('webgl', params) || canvas.getContext('experimental-webgl', params);
+
+      if (!gl) {
+        console.error('WebGL not supported');
+        return {
+          gl: null,
+          ext: {
+            formatRGBA: null,
+            formatRG: null,
+            formatR: null,
+            halfFloatTexType: null,
+            supportLinearFiltering: false
+          }
+        };
+      }
 
       let halfFloat;
       let supportLinearFiltering;
@@ -111,6 +117,17 @@ function SplashCursor({
           supportLinearFiltering
         }
       };
+    }
+
+    const { gl, ext } = getWebGLContext(canvas);
+    if (!gl) {
+      console.error('WebGL context could not be created');
+      return;
+    }
+    
+    if (!ext.supportLinearFiltering) {
+      config.DYE_RESOLUTION = 256;
+      config.SHADING = false;
     }
 
     function getSupportedFormat(gl, internalFormat, format, type) {
