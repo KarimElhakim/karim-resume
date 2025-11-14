@@ -154,7 +154,7 @@ function App() {
         <AnimatedHero />
         <div className="hero-download">
             <a 
-              href="/Karim Elhakim Resume (EG).pdf" 
+              href={`${import.meta.env.BASE_URL}Karim Elhakim Resume (EG).pdf`} 
               download="Karim Elhakim Resume.pdf"
               className="download-button"
             >
