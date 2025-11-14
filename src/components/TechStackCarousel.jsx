@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { 
   SiDotnet, SiPostgresql, SiMongodb, SiGit, SiDocker, SiJest, SiVite,
   SiJson, SiNodedotjs, SiExpress, SiPython, SiDjango, SiReact, SiJavascript,
@@ -7,9 +7,10 @@ import {
 import { FaMicrosoft, FaCode, FaDatabase, FaCloud } from 'react-icons/fa'
 
 const TechStackCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const carouselRef = useRef(null)
-  
+  const trackRef = useRef(null)
+  const animationFrameRef = useRef(null)
+  const positionRef = useRef(0)
+
   const techStack = [
     { name: 'C#', icon: FaCode, color: '#239120' },
     { name: '.NET Core', icon: SiDotnet, color: '#512BD4' },
@@ -57,32 +58,71 @@ const TechStackCarousel = () => {
     { name: 'Vite', icon: SiVite, color: '#646CFF' },
   ]
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % techStack.length)
-    }, 2000) // Change every 2 seconds
+  // Duplicate array for seamless loop
+  const duplicatedStack = [...techStack, ...techStack]
 
-    return () => clearInterval(interval)
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+
+    const itemWidth = 200 // Approximate width of each item including gap
+    const speed = 0.5 // pixels per frame
+
+    const animate = () => {
+      positionRef.current -= speed
+
+      // Reset position when scrolled past first set
+      if (Math.abs(positionRef.current) >= techStack.length * itemWidth) {
+        positionRef.current = 0
+      }
+
+      if (track) {
+        track.style.transform = `translateX(${positionRef.current}px)`
+      }
+
+      animationFrameRef.current = requestAnimationFrame(animate)
+    }
+
+    animationFrameRef.current = requestAnimationFrame(animate)
+
+    // Pause on hover
+    const handleMouseEnter = () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+      }
+    }
+
+    const handleMouseLeave = () => {
+      animationFrameRef.current = requestAnimationFrame(animate)
+    }
+
+    const container = track.parentElement
+    if (container) {
+      container.addEventListener('mouseenter', handleMouseEnter)
+      container.addEventListener('mouseleave', handleMouseLeave)
+    }
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+      }
+      if (container) {
+        container.removeEventListener('mouseenter', handleMouseEnter)
+        container.removeEventListener('mouseleave', handleMouseLeave)
+      }
+    }
   }, [techStack.length])
 
   return (
-    <div className="tech-carousel-wrapper">
-      <div className="tech-carousel-container" ref={carouselRef}>
-        <div 
-          className="tech-carousel-track"
-          style={{ 
-            transform: `translateX(-${currentIndex * 100}%)`,
-            transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
-          }}
-        >
-          {techStack.map((tech, index) => {
+    <div className="tech-scroll-container">
+      <div className="tech-scroll-wrapper">
+        <div ref={trackRef} className="tech-scroll-track">
+          {duplicatedStack.map((tech, index) => {
             const IconComponent = tech.icon
             return (
-              <div key={index} className="tech-carousel-slide">
-                <div className="tech-carousel-item">
-                  <IconComponent className="tech-carousel-icon" style={{ color: tech.color }} />
-                  <span className="tech-carousel-name">{tech.name}</span>
-                </div>
+              <div key={index} className="tech-scroll-item group">
+                <IconComponent className="tech-scroll-icon" style={{ color: tech.color }} />
+                <span className="tech-scroll-name">{tech.name}</span>
               </div>
             )
           })}

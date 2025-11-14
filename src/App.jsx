@@ -5,6 +5,7 @@ import AnimatedHero from './components/AnimatedHero'
 import TechStackCarousel from './components/TechStackCarousel'
 import ExperienceCarousel from './components/ExperienceCarousel'
 import GitHubProjects from './components/GitHubProjects'
+import SplashCursor from './components/SplashCursor'
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -215,23 +216,17 @@ function App() {
   return (
     <div className="App">
       {/* Header/Navigation */}
-      <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
-        <nav className="nav">
-          <div className="nav-brand">Karim Elhakim</div>
-          <button 
-            className="mobile-menu-toggle"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
-          </button>
-          <ul className={`nav-menu ${isMobileMenuOpen ? 'active' : ''}`}>
-            <li><a href="#home" onClick={() => setIsMobileMenuOpen(false)}>Home</a></li>
-            <li><a href="#experience" onClick={() => setIsMobileMenuOpen(false)}>Experience</a></li>
-            <li><a href="#projects" onClick={() => setIsMobileMenuOpen(false)}>Projects</a></li>
-            <li><a href="#resume" onClick={() => setIsMobileMenuOpen(false)}>Resume</a></li>
-            <li><a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</a></li>
-          </ul>
+      <header className="header-glass">
+        <nav className="nav-glass">
+          <div className="nav-scroll-container">
+            <ul className="nav-menu-glass">
+              <li><a href="#home" className="nav-link-glass active" onClick={() => setIsMobileMenuOpen(false)}>Home</a></li>
+              <li><a href="#experience" className="nav-link-glass" onClick={() => setIsMobileMenuOpen(false)}>Experience</a></li>
+              <li><a href="#projects" className="nav-link-glass" onClick={() => setIsMobileMenuOpen(false)}>Projects</a></li>
+              <li><a href="/Karim Elhakim Resume (EG).pdf" className="nav-link-glass" download onClick={() => setIsMobileMenuOpen(false)}>Resume</a></li>
+              <li><a href="#contact" className="nav-link-glass" onClick={() => setIsMobileMenuOpen(false)}>Contact</a></li>
+            </ul>
+          </div>
         </nav>
       </header>
 
