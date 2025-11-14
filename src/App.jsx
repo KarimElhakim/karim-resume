@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
-import { FaDownload, FaBars, FaTimes, FaGithub, FaEnvelope } from 'react-icons/fa'
+import { FaDownload, FaBars, FaTimes, FaGithub, FaEnvelope, FaLinkedin } from 'react-icons/fa'
 import AnimatedHero from './components/AnimatedHero'
 import TechStackCarousel from './components/TechStackCarousel'
 import ExperienceCarousel from './components/ExperienceCarousel'
@@ -10,84 +10,100 @@ function App() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [formStatus, setFormStatus] = useState({ loading: false, success: false, error: false, message: '' })
-  const [expandedCategory, setExpandedCategory] = useState(null)
   const cursorTrailRef = useRef([])
   const cursorRef = useRef(null)
+  const mousePosRef = useRef({ x: 0, y: 0 })
+  const animationFrameRef = useRef(null)
 
-  // Custom cursor and trail effect
+  // Smooth cursor with fluid propagation effect
   useEffect(() => {
     const cursor = document.createElement('div')
     cursor.className = 'custom-cursor'
     cursor.style.cssText = `
       position: fixed;
-      width: 20px;
-      height: 20px;
-      border: 2px solid var(--accent);
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
       border-radius: 50%;
       pointer-events: none;
       z-index: 9999;
       transform: translate(-50%, -50%);
-      transition: width 0.2s, height 0.2s, opacity 0.2s;
       opacity: 0;
+      transition: opacity 0.2s ease;
     `
     document.body.appendChild(cursor)
     cursorRef.current = cursor
 
-    const createTrail = (e) => {
-      // Create multiple fluid particles with hue shifts
-      for (let i = 0; i < 3; i++) {
+    let lastTime = 0
+    const trailLength = 15
+
+    const animate = (currentTime) => {
+      if (!cursorRef.current) return
+
+      const deltaTime = currentTime - lastTime
+      lastTime = currentTime
+
+      // Update cursor position smoothly
+      if (cursorRef.current) {
+        const { x, y } = mousePosRef.current
+        cursorRef.current.style.left = x + 'px'
+        cursorRef.current.style.top = y + 'px'
+        cursorRef.current.style.opacity = '1'
+      }
+
+      // Create fluid trail particles
+      if (deltaTime > 16) { // ~60fps
         const trail = document.createElement('div')
         trail.className = 'cursor-trail'
-        const hue = (Date.now() * 0.1 + i * 30) % 360
-        const size = 8 + i * 2
+        const hue = (Date.now() * 0.05) % 360
         trail.style.cssText = `
           position: fixed;
-          left: ${e.clientX}px;
-          top: ${e.clientY}px;
-          width: ${size}px;
-          height: ${size}px;
-          background: hsla(${hue}, 100%, 60%, 0.6);
+          left: ${mousePosRef.current.x}px;
+          top: ${mousePosRef.current.y}px;
+          width: 8px;
+          height: 8px;
+          background: hsla(${hue}, 100%, 60%, 0.8);
           border-radius: 50%;
           pointer-events: none;
           z-index: 9998;
           transform: translate(-50%, -50%);
-          box-shadow: 0 0 ${size * 2}px hsla(${hue}, 100%, 60%, 0.8);
-          animation: fluidFade 1.5s ease-out forwards;
+          box-shadow: 0 0 12px hsla(${hue}, 100%, 60%, 0.9);
         `
         document.body.appendChild(trail)
-
         cursorTrailRef.current.push(trail)
 
-        // Remove trail after animation
-        setTimeout(() => {
-          if (trail.parentNode) {
-            trail.parentNode.removeChild(trail)
+        // Animate trail particles
+        let opacity = 0.8
+        let scale = 1
+        const fadeInterval = setInterval(() => {
+          opacity -= 0.05
+          scale += 0.1
+          trail.style.opacity = opacity
+          trail.style.transform = `translate(-50%, -50%) scale(${scale})`
+          
+          if (opacity <= 0) {
+            clearInterval(fadeInterval)
+            if (trail.parentNode) {
+              trail.parentNode.removeChild(trail)
+            }
+            cursorTrailRef.current = cursorTrailRef.current.filter(t => t !== trail)
           }
-          cursorTrailRef.current = cursorTrailRef.current.filter(t => t !== trail)
-        }, 1500)
-      }
+        }, 16)
 
-      // Update custom cursor position with hue shift
-      if (cursorRef.current) {
-        const hue = (Date.now() * 0.1) % 360
-        cursorRef.current.style.left = e.clientX + 'px'
-        cursorRef.current.style.top = e.clientY + 'px'
-        cursorRef.current.style.opacity = '1'
-        cursorRef.current.style.borderColor = `hsl(${hue}, 100%, 60%)`
-        cursorRef.current.style.boxShadow = `0 0 15px hsl(${hue}, 100%, 60%)`
-      }
-
-      // Remove old trails if too many
-      if (cursorTrailRef.current.length > 30) {
-        const oldTrail = cursorTrailRef.current.shift()
-        if (oldTrail && oldTrail.parentNode) {
-          oldTrail.parentNode.removeChild(oldTrail)
+        // Remove old trails
+        if (cursorTrailRef.current.length > trailLength) {
+          const oldTrail = cursorTrailRef.current.shift()
+          if (oldTrail && oldTrail.parentNode) {
+            oldTrail.parentNode.removeChild(oldTrail)
+          }
         }
       }
+
+      animationFrameRef.current = requestAnimationFrame(animate)
     }
 
     const handleMouseMove = (e) => {
-      createTrail(e)
+      mousePosRef.current = { x: e.clientX, y: e.clientY }
     }
 
     const handleMouseLeave = () => {
@@ -102,38 +118,19 @@ function App() {
       }
     }
 
-    const handleLinkHover = (e) => {
-      if (cursorRef.current) {
-        cursorRef.current.style.width = '30px'
-        cursorRef.current.style.height = '30px'
-      }
-    }
-
-    const handleLinkLeave = () => {
-      if (cursorRef.current) {
-        cursorRef.current.style.width = '20px'
-        cursorRef.current.style.height = '20px'
-      }
-    }
-
-    const links = document.querySelectorAll('a, button, .tech-item')
-    links.forEach(link => {
-      link.addEventListener('mouseenter', handleLinkHover)
-      link.addEventListener('mouseleave', handleLinkLeave)
-    })
-
-    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
     document.addEventListener('mouseleave', handleMouseLeave)
     document.addEventListener('mouseenter', handleMouseEnter)
+
+    animationFrameRef.current = requestAnimationFrame(animate)
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseleave', handleMouseLeave)
       document.removeEventListener('mouseenter', handleMouseEnter)
-      links.forEach(link => {
-        link.removeEventListener('mouseenter', handleLinkHover)
-        link.removeEventListener('mouseleave', handleLinkLeave)
-      })
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+      }
       if (cursorRef.current && cursorRef.current.parentNode) {
         cursorRef.current.parentNode.removeChild(cursorRef.current)
       }
@@ -147,7 +144,7 @@ function App() {
         setIsMobileMenuOpen(false)
       }
     }
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [isMobileMenuOpen])
 
@@ -495,17 +492,18 @@ function App() {
               </p>
               <div className="contact-details">
                 <p><strong>Location:</strong> Family City Compound - Fifth Settlement New Cairo - Cairo</p>
-                <p><strong>Email:</strong> <a href="mailto:karimali1896@gmail.com?subject=Hi%20There&body=Hi%20Karim," className="contact-link">karimali1896@gmail.com</a></p>
+                <p><strong>Email:</strong> <a href="mailto:karimali1896@gmail.com?subject=Hi%20There&body=Hi%20Karim,%0D%0A%0D%0A" className="contact-link">karimali1896@gmail.com</a></p>
                 <p><strong>Phone:</strong> <a href="tel:+201018999261" className="contact-link">01018999261</a></p>
                 <div className="social-links">
                   <a href="https://www.linkedin.com/in/karim-elhakim-200725104/" target="_blank" rel="noopener noreferrer" className="social-link">
+                    <FaLinkedin className="social-icon" />
                     <span>LinkedIn</span>
                   </a>
                   <a href="https://github.com/KarimElhakim" target="_blank" rel="noopener noreferrer" className="social-link">
                     <FaGithub className="social-icon" />
                     <span>GitHub</span>
                   </a>
-                  <a href="mailto:karimali1896@gmail.com?subject=Hi%20There&body=Hi%20Karim," className="social-link">
+                  <a href="mailto:karimali1896@gmail.com?subject=Hi%20There&body=Hi%20Karim,%0D%0A%0D%0A" className="social-link">
                     <FaEnvelope className="social-icon" />
                     <span>Email</span>
                   </a>
