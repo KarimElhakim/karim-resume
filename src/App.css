@@ -406,7 +406,9 @@ body {
 /* Tech Stack Section */
 .tech-stack-section {
   padding: 6rem 2rem;
-  background: var(--bg-secondary);
+  background: transparent;
+  position: relative;
+  z-index: 2;
 }
 
 .container {
@@ -940,7 +942,9 @@ body {
 /* Work Experience Section */
 .work-experience-section {
   padding: 6rem 2rem;
-  background: var(--bg-secondary);
+  background: transparent;
+  position: relative;
+  z-index: 2;
 }
 
 .work-item {
@@ -1031,7 +1035,9 @@ body {
 /* Education Section */
 .education-section {
   padding: 6rem 2rem;
-  background: var(--bg-primary);
+  background: transparent;
+  position: relative;
+  z-index: 2;
 }
 
 .education-item {
@@ -1144,7 +1150,9 @@ body {
 /* Projects Section */
 .projects-section {
   padding: 6rem 2rem;
-  background: var(--bg-secondary);
+  background: transparent;
+  position: relative;
+  z-index: 2;
 }
 
 .projects-grid {
@@ -1166,7 +1174,9 @@ body {
 /* Contact Section */
 .contact-section {
   padding: 6rem 2rem;
-  background: var(--bg-primary);
+  background: transparent;
+  position: relative;
+  z-index: 2;
 }
 
 .contact-wrapper {
