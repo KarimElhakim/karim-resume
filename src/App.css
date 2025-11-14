@@ -1795,4 +1795,50 @@ html {
   .section-title {
     font-size: 1.5rem;
   }
+
+  .hero-card {
+    min-height: 300px;
+  }
+
+  .hero-text-content {
+    padding: 1.5rem 1rem;
+  }
+
+  .scroll-stack-item-wrapper {
+    min-height: 70vh;
+    padding: 0.75rem;
+  }
+
+  .scroll-stack-item {
+    padding: 1.25rem;
+  }
+
+  .exp-card-title {
+    font-size: 1.25rem;
+  }
+
+  .exp-card-list li {
+    font-size: 0.85rem;
+  }
+
+  .tech-scroll-name {
+    font-size: 0.75rem;
+  }
+
+  .tech-scroll-icon {
+    height: 1.25rem;
+  }
+
+  .work-item,
+  .education-item {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .project-card {
+    padding: 1.25rem;
+  }
+
+  .contact-form {
+    padding: 1.5rem;
+  }
 }
