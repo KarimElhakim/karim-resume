@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
-import { FaDownload, FaBars, FaTimes, FaGraduationCap } from 'react-icons/fa'
+import { FaDownload, FaBars, FaTimes, FaGithub, FaEnvelope } from 'react-icons/fa'
 import AnimatedHero from './components/AnimatedHero'
 import TechStackCarousel from './components/TechStackCarousel'
 import ExperienceCarousel from './components/ExperienceCarousel'
@@ -241,13 +241,13 @@ function App() {
       <section id="home" className="hero">
         <AnimatedHero />
         <div className="hero-download">
-          <a 
-            href={`${import.meta.env.BASE_URL}${encodeURIComponent('Karim Elhakim Resume (EG).pdf')}`} 
-            download="Karim Elhakim Resume.pdf"
-            className="download-button"
-          >
-            <FaDownload className="button-icon" /> Download Resume PDF
-          </a>
+            <a 
+              href="/Karim Elhakim Resume (EG).pdf" 
+              download="Karim Elhakim Resume.pdf"
+              className="download-button"
+            >
+              <FaDownload className="button-icon" /> Download Resume PDF
+            </a>
         </div>
       </section>
 
@@ -372,7 +372,7 @@ function App() {
                 <h3 className="work-title">Senior Software Engineer</h3>
                 <h4 className="work-company">ITWORX | 2023 - 2024</h4>
               </div>
-              <img src={`${import.meta.env.BASE_URL}itworx-logo.png`} alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
+              <img src="/itworx-logo.png" alt="ITWORX Logo" className="company-logo" />
             </div>
             <p className="work-description">
               Worked on improving backend features in .NET and SQL Server applications, helping make 
@@ -391,7 +391,7 @@ function App() {
                 <h3 className="work-title">Software Support Specialist</h3>
                 <h4 className="work-company">ITWORX | 2020 - 2023</h4>
               </div>
-              <img src={`${import.meta.env.BASE_URL}itworx-logo.png`} alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
+              <img src="/itworx-logo.png" alt="ITWORX Logo" className="company-logo" />
             </div>
             <p className="work-description">
               Supported AgilePoint and other internal applications, helping users resolve issues quickly 
@@ -410,7 +410,7 @@ function App() {
                 <h3 className="work-title">Application Support Specialist</h3>
                 <h4 className="work-company">ITWORX | 2019 - 2020</h4>
               </div>
-              <img src={`${import.meta.env.BASE_URL}itworx-logo.png`} alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
+              <img src="/itworx-logo.png" alt="ITWORX Logo" className="company-logo" />
             </div>
             <p className="work-description">
               Handled user tickets and technical requests, making sure issues were understood clearly 
@@ -431,7 +431,7 @@ function App() {
           
           <div className="education-item">
             <div className="education-header">
-              <FaGraduationCap className="university-icon" />
+              <img src="/uwe-logo.png" alt="UWE Bristol Logo" className="university-logo" onError={(e) => { e.target.src = '/uwe-logo.svg' }} />
               <div>
                 <h3 className="education-degree">Master's in Artificial Intelligence</h3>
                 <h4 className="education-institution">University of the West of England (UWE Bristol), UK | Completed: September 2025</h4>
@@ -453,7 +453,7 @@ function App() {
 
           <div className="education-item">
             <div className="education-header">
-              <img src={`${import.meta.env.BASE_URL}aast-logo.png`} alt="AAST Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none' }} />
+              <img src="/aast-logo.png" alt="AAST Logo" className="university-logo" />
               <div>
                 <h3 className="education-degree">Bachelor of Engineering in Mechatronics</h3>
                 <h4 className="education-institution">Arab Academy for Science and Technology (AAST), Cairo, Egypt | Graduated: 2018</h4>
@@ -495,10 +495,20 @@ function App() {
               </p>
               <div className="contact-details">
                 <p><strong>Location:</strong> Family City Compound - Fifth Settlement New Cairo - Cairo</p>
-                <p><strong>Email:</strong> <a href="mailto:karimali1896@gmail.com">karimali1896@gmail.com</a></p>
-                <p><strong>Phone:</strong> <a href="tel:+201018999261">01018999261</a></p>
+                <p><strong>Email:</strong> <a href="mailto:karimali1896@gmail.com?subject=Hi%20There&body=Hi%20Karim," className="contact-link">karimali1896@gmail.com</a></p>
+                <p><strong>Phone:</strong> <a href="tel:+201018999261" className="contact-link">01018999261</a></p>
                 <div className="social-links">
-                  <a href="https://www.linkedin.com/in/karim-elhakim-200725104/" target="_blank" rel="noopener noreferrer" className="social-link">LinkedIn</a>
+                  <a href="https://www.linkedin.com/in/karim-elhakim-200725104/" target="_blank" rel="noopener noreferrer" className="social-link">
+                    <span>LinkedIn</span>
+                  </a>
+                  <a href="https://github.com/KarimElhakim" target="_blank" rel="noopener noreferrer" className="social-link">
+                    <FaGithub className="social-icon" />
+                    <span>GitHub</span>
+                  </a>
+                  <a href="mailto:karimali1896@gmail.com?subject=Hi%20There&body=Hi%20Karim," className="social-link">
+                    <FaEnvelope className="social-icon" />
+                    <span>Email</span>
+                  </a>
                 </div>
               </div>
             </div>

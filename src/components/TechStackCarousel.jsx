@@ -7,11 +7,11 @@ import {
 import { FaMicrosoft, FaCode, FaDatabase, FaCloud } from 'react-icons/fa'
 
 const TechStackCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [rotation, setRotation] = useState(0)
   
   const techStack = [
     { name: 'C#', icon: FaCode, color: '#239120' },
-    { name: '.NET Core', icon: SiDotnet, color: '#512BD4' },
+    { name: '.NET', icon: SiDotnet, color: '#512BD4' },
     { name: 'ASP.NET', icon: FaMicrosoft, color: '#0078D4' },
     { name: 'SQL Server', icon: FaDatabase, color: '#CC2927' },
     { name: 'PostgreSQL', icon: SiPostgresql, color: '#336791' },
@@ -27,39 +27,44 @@ const TechStackCarousel = () => {
     { name: 'CSS3', icon: SiCss3, color: '#1572B6' },
   ]
 
+  const totalItems = techStack.length
+  const angleStep = 360 / totalItems
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % techStack.length)
-    }, 3000)
+      setRotation(prev => prev + angleStep)
+    }, 150) // Fast rotation
 
     return () => clearInterval(interval)
-  }, [techStack.length])
+  }, [angleStep])
 
   return (
-    <div className="tech-carousel">
-      <div className="tech-carousel-track" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+    <div className="tech-belt-container">
+      <div className="tech-belt" style={{ transform: `rotate(${rotation}deg)` }}>
         {techStack.map((tech, index) => {
           const IconComponent = tech.icon
+          const itemAngle = index * angleStep
+          const radius = 200 // Distance from center
+          const x = Math.cos((itemAngle * Math.PI) / 180) * radius
+          const y = Math.sin((itemAngle * Math.PI) / 180) * radius
+          
           return (
-            <div key={index} className="tech-carousel-item">
-              <IconComponent className="tech-carousel-icon" style={{ color: tech.color }} />
-              <span className="tech-carousel-name">{tech.name}</span>
+            <div
+              key={index}
+              className="tech-belt-item"
+              style={{
+                transform: `translate(${x}px, ${y}px) rotate(${-rotation}deg)`,
+                color: tech.color
+              }}
+            >
+              <IconComponent className="tech-belt-icon" />
+              <span className="tech-belt-name">{tech.name}</span>
             </div>
           )
         })}
-      </div>
-      <div className="tech-carousel-indicators">
-        {techStack.map((_, index) => (
-          <div
-            key={index}
-            className={`tech-indicator ${index === currentIndex ? 'active' : ''}`}
-            onClick={() => setCurrentIndex(index)}
-          />
-        ))}
       </div>
     </div>
   )
 }
 
 export default TechStackCarousel
-

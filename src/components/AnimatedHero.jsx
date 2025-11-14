@@ -1,72 +1,100 @@
 import { useState, useEffect } from 'react'
 
 const AnimatedHero = () => {
-  const [displayedLines, setDisplayedLines] = useState(['', '', ''])
-  const [currentLineIndex, setCurrentLineIndex] = useState(0)
+  const [displayedText, setDisplayedText] = useState('')
+  const [showCursor, setShowCursor] = useState(true)
+  const [glitchActive, setGlitchActive] = useState(false)
   
-  const lines = [
-    "Hi, I'm Karim Elhakim",
-    "Software Engineer & AI Specialist",
-    "Software Engineer | Backend Developer | AI Specialist | B.Sc. Mechatronics Engineering | M.Sc. Artificial Intelligence"
-  ]
+  const fullText = "Hi, I'm Karim Elhakim\nSoftware Engineer & AI Specialist\nSoftware Engineer | Backend Developer | AI Specialist | B.Sc. Mechatronics Engineering | M.Sc. Artificial Intelligence"
+  const lines = fullText.split('\n')
 
   useEffect(() => {
-    if (currentLineIndex >= lines.length) return
-
-    const line = lines[currentLineIndex]
     let charIndex = 0
-    const interval = setInterval(() => {
+    let lineIndex = 0
+    let currentLine = ''
+    
+    const typeInterval = setInterval(() => {
+      if (lineIndex >= lines.length) {
+        clearInterval(typeInterval)
+        setShowCursor(false)
+        return
+      }
+
+      const line = lines[lineIndex]
+      
       if (charIndex < line.length) {
-        setDisplayedLines(prev => {
-          const newLines = [...prev]
-          newLines[currentLineIndex] = line.substring(0, charIndex + 1)
-          return newLines
+        currentLine += line[charIndex]
+        setDisplayedText(prev => {
+          const prevLines = prev.split('\n')
+          prevLines[lineIndex] = currentLine
+          return prevLines.join('\n')
         })
         charIndex++
+        
+        // Random glitch effect
+        if (Math.random() > 0.95) {
+          setGlitchActive(true)
+          setTimeout(() => setGlitchActive(false), 100)
+        }
       } else {
-        clearInterval(interval)
-        setTimeout(() => {
-          setCurrentLineIndex(prev => prev + 1)
-        }, 1000)
+        // Move to next line
+        charIndex = 0
+        lineIndex++
+        currentLine = ''
+        setDisplayedText(prev => prev + '\n')
       }
-    }, 50)
+    }, 30) // Faster typing speed
 
-    return () => clearInterval(interval)
-  }, [currentLineIndex])
+    // Cursor blink
+    const cursorInterval = setInterval(() => {
+      setShowCursor(prev => !prev)
+    }, 530)
 
-  const renderAnimatedText = (text) => {
-    return text.split('').map((char, index) => (
-      <span
-        key={index}
-        className="hero-char"
-        style={{
-          animationDelay: `${index * 0.03}s`,
-          display: 'inline-block'
-        }}
-      >
-        {char === ' ' ? '\u00A0' : char}
-      </span>
-    ))
+    return () => {
+      clearInterval(typeInterval)
+      clearInterval(cursorInterval)
+    }
+  }, [])
+
+  const renderText = () => {
+    return displayedText.split('\n').map((line, lineIndex) => {
+      if (!line) return null
+      return (
+        <div key={lineIndex} className={`hero-line ${lineIndex === 0 ? 'hero-title' : lineIndex === 1 ? 'hero-subtitle' : 'hero-description'}`}>
+          {line.split('').map((char, charIndex) => (
+            <span
+              key={charIndex}
+              className={`hero-char ${glitchActive && Math.random() > 0.7 ? 'glitch' : ''}`}
+              style={{
+                animationDelay: `${charIndex * 0.02}s`
+              }}
+            >
+              {char === ' ' ? '\u00A0' : char}
+            </span>
+          ))}
+          {lineIndex === displayedText.split('\n').length - 1 && showCursor && (
+            <span className="cursor-blink">_</span>
+          )}
+        </div>
+      )
+    })
   }
 
   return (
-    <div className="hero-content">
-      <h1 className="hero-title">
-        {renderAnimatedText(displayedLines[0])}
-      </h1>
-      {displayedLines[0].length === lines[0].length && (
-        <h2 className="hero-subtitle">
-          {renderAnimatedText(displayedLines[1])}
-        </h2>
-      )}
-      {displayedLines[1].length === lines[1].length && (
-        <p className="hero-description">
-          {renderAnimatedText(displayedLines[2])}
-        </p>
-      )}
+    <div className="hero-content hacker-style">
+      <div className="terminal-window">
+        <div className="terminal-header">
+          <span className="terminal-dot red"></span>
+          <span className="terminal-dot yellow"></span>
+          <span className="terminal-dot green"></span>
+          <span className="terminal-title">karim@terminal</span>
+        </div>
+        <div className="terminal-body">
+          {renderText()}
+        </div>
+      </div>
     </div>
   )
 }
 
 export default AnimatedHero
-

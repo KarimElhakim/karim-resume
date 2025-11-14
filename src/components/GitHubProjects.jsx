@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { FaGithub } from 'react-icons/fa'
 
 const GitHubProjects = () => {
   const [projects, setProjects] = useState([])
@@ -11,7 +12,24 @@ const GitHubProjects = () => {
         const response = await fetch('https://api.github.com/users/KarimElhakim/repos?sort=updated&per_page=6')
         if (!response.ok) throw new Error('Failed to fetch projects')
         const data = await response.json()
-        setProjects(data)
+        
+        // Fetch languages for each project
+        const projectsWithLanguages = await Promise.all(
+          data.map(async (project) => {
+            try {
+              const langResponse = await fetch(project.languages_url)
+              if (langResponse.ok) {
+                const languages = await langResponse.json()
+                return { ...project, languages: Object.keys(languages) }
+              }
+            } catch (err) {
+              console.error(`Failed to fetch languages for ${project.name}:`, err)
+            }
+            return { ...project, languages: project.language ? [project.language] : [] }
+          })
+        )
+        
+        setProjects(projectsWithLanguages)
         setLoading(false)
       } catch (err) {
         setError(err.message)
@@ -41,18 +59,22 @@ const GitHubProjects = () => {
           className="project-card"
         >
           <div className="project-header">
-            <img
-              src={`https://github.com/${project.owner.login}.png`}
-              alt={project.owner.login}
-              className="project-avatar"
-            />
+            <FaGithub className="project-github-icon" />
             <div className="project-info">
               <h3 className="project-name">{project.name}</h3>
               <p className="project-description">{project.description || 'No description available'}</p>
             </div>
           </div>
+          <div className="project-languages">
+            {project.languages && project.languages.length > 0 ? (
+              project.languages.map((lang, index) => (
+                <span key={index} className="project-language-tag">{lang}</span>
+              ))
+            ) : (
+              <span className="project-language-tag">{project.language || 'Other'}</span>
+            )}
+          </div>
           <div className="project-footer">
-            <span className="project-language">{project.language || 'Other'}</span>
             <span className="project-stars">⭐ {project.stargazers_count}</span>
           </div>
         </a>
@@ -62,4 +84,3 @@ const GitHubProjects = () => {
 }
 
 export default GitHubProjects
-
