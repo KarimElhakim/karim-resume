@@ -114,7 +114,7 @@
 }
 
 .scroll-stack-item-wrapper {
-  min-height: 100vh;
+  min-height: 100%;
   scroll-snap-align: center;
   scroll-snap-stop: always;
   display: flex;

@@ -413,7 +413,7 @@ body {
 
 .tech-logo-loop-wrapper {
   width: 100%;
-  height: 120px;
+  height: 140px;
   position: relative;
   overflow: hidden;
   margin: 2rem 0;
@@ -831,6 +831,18 @@ body {
 .challenges-section .container {
   height: 100vh;
   max-height: 800px;
+  display: flex;
+  flex-direction: column;
+}
+
+.challenges-section .section-title {
+  margin-bottom: 2rem;
+  flex-shrink: 0;
+}
+
+.challenges-section .scroll-stack-wrapper {
+  flex: 1;
+  min-height: 0;
 }
 
 .challenges-accordion {
@@ -998,22 +1010,15 @@ body {
 }
 
 .company-logo {
-  max-height: 60px;
-  max-width: 180px;
+  max-height: 50px;
+  max-width: 150px;
   height: auto;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
-  mix-blend-mode: screen;
-  transition: all 0.3s ease;
-  display: block;
-}
-
-.company-logo:hover {
   opacity: 1;
-  transform: scale(1.05);
+  filter: none;
+  display: block;
 }
 
 .work-description {
@@ -1083,28 +1088,15 @@ body {
 }
 
 .university-logo {
-  max-height: 70px;
-  max-width: 200px;
+  max-height: 60px;
+  max-width: 150px;
   height: auto;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
-  mix-blend-mode: screen;
-  transition: all 0.3s ease;
+  opacity: 1;
+  filter: none;
   display: block;
-}
-
-.university-logo:hover {
-  opacity: 1;
-  transform: scale(1.05);
-}
-
-/* AAST logo specific styling */
-.university-logo[alt*="AAST"] {
-  filter: brightness(1.2) contrast(1.1);
-  opacity: 1;
 }
 
 .education-degree {

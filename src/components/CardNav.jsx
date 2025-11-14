@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import './CardNav.css'
-import StarBorder from './StarBorder'
 
 const CardNav = ({
   logo,
@@ -56,8 +55,7 @@ const CardNav = ({
 
   return (
     <nav ref={navRef} className={`card-nav ${isScrolled ? 'scrolled' : ''}`}>
-      <StarBorder color="cyan" speed="8s" className="card-nav-border">
-        <div className="card-nav-container">
+      <div className="card-nav-container">
         {logo && (
           <a href="#home" className="card-nav-logo">
             <img src={logo} alt={logoAlt} />
@@ -128,7 +126,6 @@ const CardNav = ({
           ))}
         </div>
       </div>
-      </StarBorder>
     </nav>
   )
 }
