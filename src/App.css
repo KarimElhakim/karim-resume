@@ -1628,9 +1628,14 @@ html {
     min-height: 100vh;
   }
 
+  .hero-card {
+    max-width: 95%;
+    min-height: 350px;
+    margin: 0 auto;
+  }
+
   .hero-text-content {
-    padding: 1.5rem;
-    margin: 0 1rem;
+    padding: 2rem 1.5rem;
   }
 
   .hero-title-main {
