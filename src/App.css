@@ -269,6 +269,25 @@ body {
 .hero-line {
   margin-bottom: 1rem;
   text-align: left;
+  min-height: 1.5em;
+}
+
+.hero-line.hero-title {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.hero-line.hero-subtitle {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.hero-line.hero-description {
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  color: var(--text-secondary);
+  line-height: 1.8;
 }
 
 .hero-char {
