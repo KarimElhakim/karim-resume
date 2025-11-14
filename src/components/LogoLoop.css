@@ -1,0 +1,33 @@
+.logo-loop-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.logo-loop-track {
+  display: flex;
+  align-items: center;
+  will-change: transform;
+}
+
+.logo-loop-item {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+  color: inherit;
+  text-decoration: none;
+}
+
+.logo-loop-item.scale-on-hover:hover {
+  transform: scale(1.1);
+}
+
+.logo-loop-item img {
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.logo-loop-item:hover img {
+  opacity: 1;
+}
+

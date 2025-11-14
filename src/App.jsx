@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { FaDownload, FaGithub, FaEnvelope, FaLinkedin } from 'react-icons/fa'
+import { SiGmail } from 'react-icons/si'
 import AnimatedHero from './components/AnimatedHero'
 import TechStackCarousel from './components/TechStackCarousel'
 import ScrollStack, { ScrollStackItem } from './components/ScrollStack'
@@ -476,8 +477,8 @@ function App() {
                     <FaGithub className="social-icon" />
                     <span>GitHub</span>
                   </a>
-                  <a href="mailto:karimali1896@gmail.com?subject=Hi%20There&body=Hi%20Karim,%0D%0A%0D%0A" className="social-link">
-                    <FaEnvelope className="social-icon" />
+                  <a href="mailto:karimali1896@gmail.com?subject=Hi%20There&body=Hi%20Karim,%0D%0A%0D%0A" className="social-link email-link">
+                    <SiGmail className="social-icon gmail-icon" style={{ color: '#EA4335' }} />
                     <span>Email</span>
                   </a>
                 </div>

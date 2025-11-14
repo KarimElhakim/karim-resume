@@ -14,6 +14,7 @@ const ScrollStack = ({ children, className = '' }) => {
   const containerRef = useRef(null)
   const itemsRef = useRef([])
   const isScrollingRef = useRef(false)
+  const scrollTimeoutRef = useRef(null)
 
   const itemCount = Children.count(children)
 
@@ -31,7 +32,7 @@ const ScrollStack = ({ children, className = '' }) => {
 
     setTimeout(() => {
       isScrollingRef.current = false
-    }, 600)
+    }, 800)
   }
 
   useEffect(() => {
@@ -73,7 +74,7 @@ const ScrollStack = ({ children, className = '' }) => {
         if (closestIndex !== activeIndex) {
           setActiveIndex(closestIndex)
         }
-      }, 50) // Debounce for smoother updates
+      }, 100)
     }
 
     const container = containerRef.current
@@ -100,6 +101,64 @@ const ScrollStack = ({ children, className = '' }) => {
     }
   }, [children, activeIndex])
 
+  // Prevent skipping - enforce scroll snap
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    let lastScrollTop = container.scrollTop
+    let scrollVelocity = 0
+    let lastTime = Date.now()
+
+    const handleScroll = () => {
+      const currentTime = Date.now()
+      const currentScrollTop = container.scrollTop
+      const deltaTime = currentTime - lastTime
+      
+      if (deltaTime > 0) {
+        scrollVelocity = Math.abs(currentScrollTop - lastScrollTop) / deltaTime
+      }
+
+      // If scrolling too fast, snap to nearest card
+      if (scrollVelocity > 2 && !isScrollingRef.current) {
+        clearTimeout(scrollTimeoutRef.current)
+        scrollTimeoutRef.current = setTimeout(() => {
+          const containerHeight = container.clientHeight
+          const scrollTop = container.scrollTop
+          const scrollCenter = scrollTop + containerHeight / 2
+
+          let closestIndex = 0
+          let closestDistance = Infinity
+
+          Children.forEach(children, (child, index) => {
+            if (child.type !== ScrollStackItem) return
+            
+            const itemElement = itemsRef.current[index]
+            if (!itemElement) return
+
+            const itemTop = itemElement.offsetTop
+            const itemHeight = itemElement.offsetHeight
+            const itemCenter = itemTop + itemHeight / 2
+
+            const distance = Math.abs(scrollCenter - itemCenter)
+            if (distance < closestDistance) {
+              closestDistance = distance
+              closestIndex = index
+            }
+          })
+
+          scrollToIndex(closestIndex)
+        }, 200)
+      }
+
+      lastScrollTop = currentScrollTop
+      lastTime = currentTime
+    }
+
+    container.addEventListener('scroll', handleScroll, { passive: true })
+    return () => container.removeEventListener('scroll', handleScroll)
+  }, [children])
+
   // Set initial active index to 0
   useEffect(() => {
     setActiveIndex(0)
@@ -107,7 +166,7 @@ const ScrollStack = ({ children, className = '' }) => {
 
   return (
     <div className="scroll-stack-wrapper">
-      {/* Navigation Indicators */}
+      {/* Navigation Indicators - Animated Dots */}
       <div className="scroll-stack-indicators">
         {Children.map(children, (child, index) => {
           if (child.type !== ScrollStackItem) return null
@@ -120,8 +179,9 @@ const ScrollStack = ({ children, className = '' }) => {
               aria-label={`Go to card ${index + 1}`}
               title={`Card ${index + 1}`}
             >
-              <span className="indicator-number">{index + 1}</span>
-              <span className="indicator-dot"></span>
+              <span className="indicator-dot">
+                <span className="indicator-pulse"></span>
+              </span>
             </button>
           )
         })}

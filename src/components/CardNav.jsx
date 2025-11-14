@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import './CardNav.css'
+import StarBorder from './StarBorder'
 
 const CardNav = ({
   logo,
@@ -43,9 +44,20 @@ const CardNav = ({
     setActiveIndex(null)
   }
 
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
-    <nav ref={navRef} className="card-nav">
-      <div className="card-nav-container">
+    <nav ref={navRef} className={`card-nav ${isScrolled ? 'scrolled' : ''}`}>
+      <StarBorder color="cyan" speed="8s" className="card-nav-border">
+        <div className="card-nav-container">
         {logo && (
           <a href="#home" className="card-nav-logo">
             <img src={logo} alt={logoAlt} />
@@ -116,6 +128,7 @@ const CardNav = ({
           ))}
         </div>
       </div>
+      </StarBorder>
     </nav>
   )
 }

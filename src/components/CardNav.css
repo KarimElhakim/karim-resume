@@ -5,6 +5,25 @@
   right: 0;
   z-index: 1000;
   padding: 1rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-nav.scrolled {
+  padding: 0.75rem 1rem;
+  backdrop-filter: blur(30px) saturate(180%);
+  background: rgba(10, 10, 10, 0.4);
+}
+
+.card-nav-border {
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.card-nav-border .star-border-content {
+  width: 100%;
+  height: 100%;
 }
 
 .card-nav-container {
