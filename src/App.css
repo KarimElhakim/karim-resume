@@ -998,15 +998,22 @@ body {
 }
 
 .company-logo {
-  max-height: 50px;
-  max-width: 150px;
+  max-height: 60px;
+  max-width: 180px;
   height: auto;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
-  opacity: 1;
-  filter: none;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  mix-blend-mode: screen;
+  transition: all 0.3s ease;
   display: block;
+}
+
+.company-logo:hover {
+  opacity: 1;
+  transform: scale(1.05);
 }
 
 .work-description {
@@ -1076,15 +1083,28 @@ body {
 }
 
 .university-logo {
-  max-height: 60px;
-  max-width: 150px;
+  max-height: 70px;
+  max-width: 200px;
   height: auto;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
-  opacity: 1;
-  filter: none;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  mix-blend-mode: screen;
+  transition: all 0.3s ease;
   display: block;
+}
+
+.university-logo:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* AAST logo specific styling */
+.university-logo[alt*="AAST"] {
+  filter: brightness(1.2) contrast(1.1);
+  opacity: 1;
 }
 
 .education-degree {
