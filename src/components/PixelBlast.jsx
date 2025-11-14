@@ -31,11 +31,25 @@ const PixelBlast = ({
     let animationId
 
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      const container = canvas.parentElement
+      if (container) {
+        canvas.width = container.clientWidth
+        canvas.height = container.clientHeight
+      } else {
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+      }
     }
     resizeCanvas()
     window.addEventListener('resize', resizeCanvas)
+    
+    // Use ResizeObserver for better container size tracking
+    const resizeObserver = new ResizeObserver(() => {
+      resizeCanvas()
+    })
+    if (canvas.parentElement) {
+      resizeObserver.observe(canvas.parentElement)
+    }
 
     const pixels = []
     const cols = Math.floor(canvas.width / pixelSize)
@@ -131,6 +145,7 @@ const PixelBlast = ({
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('resize', resizeCanvas)
+      if (resizeObserver) resizeObserver.disconnect()
       if (animationId) cancelAnimationFrame(animationId)
     }
   }, [variant, pixelSize, color, patternScale, patternDensity, pixelSizeJitter, enableRipples, rippleSpeed, rippleThickness, rippleIntensityScale, liquid, liquidStrength, liquidRadius, liquidWobbleSpeed, speed, edgeFade, transparent])
@@ -145,7 +160,8 @@ const PixelBlast = ({
         left: 0,
         width: '100%',
         height: '100%',
-        pointerEvents: 'none'
+        pointerEvents: 'none',
+        borderRadius: 'inherit'
       }}
     />
   )
