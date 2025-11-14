@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import { 
   SiDotnet, SiPostgresql, SiMongodb,
-  SiGit, SiDocker, SiJest, SiWebpack, SiVite, SiLinux,
+  SiGit, SiDocker, SiJest, SiVite, SiLinux,
   SiJson, SiNodedotjs, SiExpress, SiPython, SiDjango,
-  SiReact, SiJavascript, SiTypescript, SiHtml5, SiCss3, SiSass, SiTailwindcss
+  SiReact, SiJavascript, SiTypescript, SiHtml5, SiCss3, SiSass, SiTailwindcss,
+  SiCsharp, SiMicrosoftazure, SiMicrosoftsqlserver
 } from 'react-icons/si'
-import { FaMicrosoft, FaCode, FaDatabase, FaCloud, FaUniversity, FaGraduationCap, FaDownload, FaBars, FaTimes } from 'react-icons/fa'
+import { FaMicrosoft, FaCode, FaDatabase, FaCloud, FaDownload, FaBars, FaTimes } from 'react-icons/fa'
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -16,7 +17,6 @@ function App() {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
-      // Close mobile menu on scroll
       if (isMobileMenuOpen) {
         setIsMobileMenuOpen(false)
       }
@@ -26,7 +26,6 @@ function App() {
   }, [isMobileMenuOpen])
 
   useEffect(() => {
-    // Close mobile menu when clicking outside
     const handleClickOutside = (e) => {
       if (isMobileMenuOpen && !e.target.closest('.nav')) {
         setIsMobileMenuOpen(false)
@@ -46,7 +45,6 @@ function App() {
     const message = formData.get('message')
 
     try {
-      // Using Formspree - easier to set up than EmailJS
       const formspreeEndpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT || 'https://formspree.io/f/xyzbrvnz'
       
       const response = await fetch(formspreeEndpoint, {
@@ -68,7 +66,7 @@ function App() {
           loading: false, 
           success: true, 
           error: false, 
-          message: 'Thank you! Your message has been sent successfully. I will get back to you soon.' 
+          message: '✅ Thank you for your message!' 
         })
         e.target.reset()
         
@@ -89,12 +87,49 @@ function App() {
     }
   }
 
+  const techStack = [
+    { name: 'C#', icon: SiCsharp },
+    { name: '.NET Core', icon: SiDotnet },
+    { name: '.NET 5/6/7', icon: SiDotnet },
+    { name: 'ASP.NET', icon: FaMicrosoft },
+    { name: 'ASP.NET Core', icon: FaMicrosoft },
+    { name: 'Web API', icon: FaMicrosoft },
+    { name: 'REST', icon: SiNodedotjs },
+    { name: 'SQL Server', icon: FaDatabase },
+    { name: 'T-SQL', icon: FaDatabase },
+    { name: 'Entity Framework', icon: FaMicrosoft },
+    { name: 'LINQ', icon: FaMicrosoft },
+    { name: 'PostgreSQL', icon: SiPostgresql },
+    { name: 'MongoDB', icon: SiMongodb },
+    { name: 'Git', icon: SiGit },
+    { name: 'Azure DevOps', icon: FaCloud },
+    { name: 'CI/CD', icon: SiGit },
+    { name: 'Docker', icon: SiDocker },
+    { name: 'Visual Studio', icon: FaMicrosoft },
+    { name: 'Azure App Services', icon: FaCloud },
+    { name: 'Azure Functions', icon: FaCloud },
+    { name: 'Azure Storage', icon: FaCloud },
+    { name: 'Application Insights', icon: FaCloud },
+    { name: 'SharePoint', icon: FaMicrosoft },
+    { name: 'ServiceNow', icon: FaCloud },
+    { name: 'AgilePoint', icon: FaMicrosoft },
+    { name: 'REST Integrations', icon: SiNodedotjs },
+    { name: 'JSON', icon: SiJson },
+    { name: 'SOAP', icon: SiJson },
+    { name: 'Unit Testing', icon: SiJest },
+    { name: 'xUnit', icon: FaMicrosoft },
+    { name: 'NUnit', icon: FaMicrosoft },
+    { name: 'Debugging', icon: FaCode },
+    { name: 'Serilog', icon: FaMicrosoft },
+    { name: 'Agile/Scrum', icon: SiGit },
+  ]
+
   return (
     <div className="App">
       {/* Header/Navigation */}
       <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
         <nav className="nav">
-          <div className="nav-brand">Resume</div>
+          <div className="nav-brand">Karim Elhakim</div>
           <button 
             className="mobile-menu-toggle"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -104,11 +139,9 @@ function App() {
           </button>
           <ul className={`nav-menu ${isMobileMenuOpen ? 'active' : ''}`}>
             <li><a href="#home" onClick={() => setIsMobileMenuOpen(false)}>Home</a></li>
-            <li><a href="#about" onClick={() => setIsMobileMenuOpen(false)}>About</a></li>
             <li><a href="#experience" onClick={() => setIsMobileMenuOpen(false)}>Experience</a></li>
-            <li><a href="#education" onClick={() => setIsMobileMenuOpen(false)}>Education</a></li>
-            <li><a href="#skills" onClick={() => setIsMobileMenuOpen(false)}>Skills</a></li>
-            <li><a href="#languages" onClick={() => setIsMobileMenuOpen(false)}>Languages & Hobbies</a></li>
+            <li><a href="#projects" onClick={() => setIsMobileMenuOpen(false)}>Projects</a></li>
+            <li><a href="#resume" onClick={() => setIsMobileMenuOpen(false)}>Resume</a></li>
             <li><a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</a></li>
           </ul>
         </nav>
@@ -117,330 +150,251 @@ function App() {
       {/* Hero Section */}
       <section id="home" className="hero">
         <div className="hero-content">
-          <h1 className="hero-title">Karim Elhakim</h1>
-          <p className="hero-subtitle">Software Engineer & AI Specialist</p>
+          <h1 className="hero-title">Hi, I'm Karim Elhakim</h1>
+          <h2 className="hero-subtitle">Software Engineer & AI Specialist</h2>
           <p className="hero-description">
-            Software Engineer with 4+ years of experience in C#/.NET backend development 
-            and enterprise application support. Recently completed a Master's in Artificial Intelligence 
-            and currently seeking a full-time development role.
+            Software Engineer | Backend Developer | AI Specialist | B.Sc. Mechatronics Engineering | M.Sc. Artificial Intelligence
           </p>
-          <div className="hero-buttons">
-            <a href="#contact" className="button primary">Get In Touch</a>
-            <a href="#about" className="button secondary">Learn More</a>
+        </div>
+      </section>
+
+      {/* Tech Stack Section */}
+      <section className="tech-stack-section">
+        <div className="container">
+          <h2 className="section-title">My Full Tech Stack</h2>
+          <div className="tech-stack-grid">
+            {techStack.map((tech, index) => {
+              const IconComponent = tech.icon
+              return (
+                <div key={index} className="tech-item">
+                  <IconComponent className="tech-icon" />
+                  <span className="tech-name">{tech.name}</span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* How I Solve Your Challenges */}
+      <section id="experience" className="challenges-section">
+        <div className="container">
+          <h2 className="section-title">How I Solve Your Development Challenges</h2>
+          
+          <div className="challenge-category">
+            <h3 className="challenge-category-title">Backend Development</h3>
+            <ul className="challenge-list">
+              <li>Built scalable .NET Core applications with clean architecture and SOLID principles</li>
+              <li>Developed RESTful APIs using ASP.NET Core Web API for enterprise applications</li>
+              <li>Optimized SQL Server databases with efficient T-SQL queries and Entity Framework Core</li>
+              <li>Implemented robust error handling, logging, and monitoring using Serilog and Application Insights</li>
+              <li>Designed and maintained microservices architecture with Docker containerization</li>
+            </ul>
+          </div>
+
+          <div className="challenge-category">
+            <h3 className="challenge-category-title">Enterprise Integration & Support</h3>
+            <ul className="challenge-list">
+              <li>Integrated applications with SharePoint, ServiceNow, and AgilePoint for seamless workflow automation</li>
+              <li>Resolved complex production issues by analyzing logs, testing fixes, and coordinating with QA teams</li>
+              <li>Supported SharePoint migrations, ensuring content and access moved correctly</li>
+              <li>Created comprehensive documentation and training materials for development teams</li>
+              <li>Participated in sprint planning and code reviews to improve codebase quality</li>
+            </ul>
+          </div>
+
+          <div className="challenge-category">
+            <h3 className="challenge-category-title">Cloud & DevOps</h3>
+            <ul className="challenge-list">
+              <li>Deployed applications to Azure App Services and Azure Functions</li>
+              <li>Set up CI/CD pipelines using Azure DevOps for automated builds and deployments</li>
+              <li>Managed containerized services with Docker for consistent development and production environments</li>
+              <li>Configured Azure Storage and Application Insights for monitoring and analytics</li>
+            </ul>
+          </div>
+
+          <div className="challenge-category">
+            <h3 className="challenge-category-title">AI & Machine Learning</h3>
+            <ul className="challenge-list">
+              <li>Completed Master's in Artificial Intelligence with focus on Machine Learning and Data Engineering</li>
+              <li>Applied AI techniques for backend integration and automation</li>
+              <li>Worked on optimization and automation using AI models</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Work Experience */}
+      <section className="work-experience-section">
+        <div className="container">
+          <h2 className="section-title">My Work</h2>
+          
+          <div className="work-item">
+            <div className="work-header">
+              <div>
+                <h3 className="work-title">Senior Software Engineer</h3>
+                <h4 className="work-company">ITWORX | 2023 - 2024</h4>
+              </div>
+              <img src={`${import.meta.env.BASE_URL}itworx-logo.png`} alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
+            </div>
+            <p className="work-description">
+              Worked on improving backend features in .NET and SQL Server applications, helping make 
+              the system more stable and easier to maintain for users and support teams.
+            </p>
+            <ul className="work-achievements">
+              <li>Helped solve several recurring production issues by carefully analyzing logs, testing fixes, and coordinating with QA to ensure changes were safe before deployment</li>
+              <li>Supported integrations with SharePoint, ServiceNow, and AgilePoint, so information and workflows could move smoothly across different tools used by clients</li>
+              <li>Participated in sprint planning and discussions about how to make the codebase cleaner and more reliable over time, while keeping delivery on track</li>
+            </ul>
+          </div>
+
+          <div className="work-item">
+            <div className="work-header">
+              <div>
+                <h3 className="work-title">Software Support Specialist</h3>
+                <h4 className="work-company">ITWORX | 2020 - 2023</h4>
+              </div>
+              <img src={`${import.meta.env.BASE_URL}itworx-logo.png`} alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
+            </div>
+            <p className="work-description">
+              Supported AgilePoint and other internal applications, helping users resolve issues quickly 
+              so they could continue their work without disruptions.
+            </p>
+            <ul className="work-achievements">
+              <li>Worked on handling requests and investigating problems by reviewing logs, testing scenarios, and coordinating with developers when deeper fixes were needed</li>
+              <li>Participated in SharePoint migrations, ensuring content and access moved correctly and users understood the new environment</li>
+              <li>Prepared clear documentation and guides to help teams get used to updated features and reduce repeated questions</li>
+            </ul>
+          </div>
+
+          <div className="work-item">
+            <div className="work-header">
+              <div>
+                <h3 className="work-title">Application Support Specialist</h3>
+                <h4 className="work-company">ITWORX | 2019 - 2020</h4>
+              </div>
+              <img src={`${import.meta.env.BASE_URL}itworx-logo.png`} alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
+            </div>
+            <p className="work-description">
+              Handled user tickets and technical requests, making sure issues were understood clearly 
+              and resolved or escalated in a timely manner.
+            </p>
+            <ul className="work-achievements">
+              <li>Assisted in system configurations and basic integrations as my responsibilities expanded over time</li>
+              <li>Helped deliver training sessions and walkthroughs when new features were introduced, improving user confidence with the tools</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Education */}
+      <section id="resume" className="education-section">
+        <div className="container">
+          <h2 className="section-title">Education</h2>
+          
+          <div className="education-item">
+            <div className="education-header">
+              <img src={`${import.meta.env.BASE_URL}uwe-logo.svg`} alt="UWE Bristol Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none' }} />
+              <div>
+                <h3 className="education-degree">Master's in Artificial Intelligence</h3>
+                <h4 className="education-institution">University of the West of England (UWE Bristol), UK | Completed: September 2025</h4>
+              </div>
+            </div>
+            <p className="education-description">
+              Focus areas: Machine Learning, Data Engineering, Applied AI Systems. 
+              Relevant work: Backend integration of AI models, optimization, and automation.
+            </p>
+            <a 
+              href="https://courses.uwe.ac.uk/I4001/artificial-intelligence" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="education-link"
+            >
+              View Course Details →
+            </a>
+          </div>
+
+          <div className="education-item">
+            <div className="education-header">
+              <img src={`${import.meta.env.BASE_URL}aast-logo.png`} alt="AAST Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none' }} />
+              <div>
+                <h3 className="education-degree">Bachelor of Engineering in Mechatronics</h3>
+                <h4 className="education-institution">Arab Academy for Science and Technology (AAST), Cairo, Egypt | Graduated: 2018</h4>
+              </div>
+            </div>
+            <p className="education-description">
+              Coursework in programming, control systems, and embedded technologies.
+            </p>
+            <a 
+              href="https://aast.edu/en/programs-courses/program.php?unit_id=353&program_id=136&language_id=1" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="education-link"
+            >
+              View Course Details →
+            </a>
+          </div>
+
+          <div className="resume-download">
             <a 
               href={`${import.meta.env.BASE_URL}${encodeURIComponent('Karim Elhakim Resume (EG).pdf')}`} 
               download="Karim Elhakim Resume.pdf"
-              className="button download"
+              className="download-button"
             >
-              <FaDownload className="button-icon" /> Download Resume
+              <FaDownload className="button-icon" /> Download Resume PDF
             </a>
           </div>
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className="section">
+      {/* Projects Section */}
+      <section id="projects" className="projects-section">
         <div className="container">
-          <h2 className="section-title">Profile</h2>
-          <div className="about-content">
-            <div className="about-text">
-              <p>
-                Software Engineer with 4+ years of experience in C#/.NET backend development 
-                and enterprise application support. Recently completed a Master's in Artificial 
-                Intelligence (Sep 2025) and currently seeking a full-time development role. 
-                Strong foundation in backend engineering, troubleshooting complex systems, and 
-                delivering stable and maintainable features.
-              </p>
-              <p>
-                My approach combines technical expertise with creative problem-solving, 
-                ensuring that every project I work on delivers both functionality and 
-                exceptional user experience. I'm always eager to learn new technologies 
-                and take on challenging projects.
-              </p>
-            </div>
-            <div className="about-stats">
-              <div className="stat-item">
-                <div className="stat-number">4+</div>
-                <div className="stat-label">Years Experience</div>
-              </div>
-              <div className="stat-item">
-                <div className="stat-number">Master's</div>
-                <div className="stat-label">AI Degree</div>
-              </div>
-              <div className="stat-item">
-                <div className="stat-number">.NET</div>
-                <div className="stat-label">Specialization</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Experience Section */}
-      <section id="experience" className="section alt">
-        <div className="container">
-          <h2 className="section-title">Work Experience</h2>
-          <div className="timeline">
-            <div className="timeline-item">
-              <div className="timeline-marker"></div>
-              <div className="timeline-content">
-                <div className="company-header">
-                  <h3>Senior Software Engineer</h3>
-                  <img src={`${import.meta.env.BASE_URL}itworx-logo.png`} alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
-                </div>
-                <h4>ITWORX | 2023 - 2024</h4>
-                <p>
-                  Worked on improving backend features in .NET and SQL Server applications, helping make 
-                  the system more stable and easier to maintain for users and support teams.
-                </p>
-                <ul>
-                  <li>Helped solve several recurring production issues by carefully analyzing logs, testing fixes, and coordinating with QA to ensure changes were safe before deployment</li>
-                  <li>Supported integrations with SharePoint, ServiceNow, and AgilePoint, so information and workflows could move smoothly across different tools used by clients</li>
-                  <li>Participated in sprint planning and discussions about how to make the codebase cleaner and more reliable over time, while keeping delivery on track</li>
-                </ul>
-              </div>
-            </div>
-            <div className="timeline-item">
-              <div className="timeline-marker"></div>
-              <div className="timeline-content">
-                <div className="company-header">
-                  <h3>Software Support Specialist</h3>
-                  <img src={`${import.meta.env.BASE_URL}itworx-logo.png`} alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
-                </div>
-                <h4>ITWORX | 2020 - 2023</h4>
-                <p>
-                  Supported AgilePoint and other internal applications, helping users resolve issues quickly 
-                  so they could continue their work without disruptions.
-                </p>
-                <ul>
-                  <li>Worked on handling requests and investigating problems by reviewing logs, testing scenarios, and coordinating with developers when deeper fixes were needed</li>
-                  <li>Participated in SharePoint migrations, ensuring content and access moved correctly and users understood the new environment</li>
-                  <li>Prepared clear documentation and guides to help teams get used to updated features and reduce repeated questions</li>
-                </ul>
-              </div>
-            </div>
-            <div className="timeline-item">
-              <div className="timeline-marker"></div>
-              <div className="timeline-content">
-                <div className="company-header">
-                  <h3>Application Support Specialist</h3>
-                  <img src={`${import.meta.env.BASE_URL}itworx-logo.png`} alt="ITWORX Logo" className="company-logo" onError={(e) => { e.target.style.display = 'none' }} />
-                </div>
-                <h4>ITWORX | 2019 - 2020</h4>
-                <p>
-                  Handled user tickets and technical requests, making sure issues were understood clearly 
-                  and resolved or escalated in a timely manner.
-                </p>
-                <ul>
-                  <li>Assisted in system configurations and basic integrations as my responsibilities expanded over time</li>
-                  <li>Helped deliver training sessions and walkthroughs when new features were introduced, improving user confidence with the tools</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Education Section */}
-      <section id="education" className="section">
-        <div className="container">
-          <h2 className="section-title">Education</h2>
-          <div className="education-grid">
-            <div className="education-card">
-              <div className="education-header">
-                <img src={`${import.meta.env.BASE_URL}uwe-logo.svg`} alt="UWE Bristol Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none' }} />
-                <div>
-                  <h3>Master's in Artificial Intelligence</h3>
-                  <h4>University of the West of England (UWE Bristol), UK | Completed: September 2025</h4>
-                </div>
-              </div>
-              <p>
-                Focus areas: Machine Learning, Data Engineering, Applied AI Systems. 
-                Relevant work: Backend integration of AI models, optimization, and automation.
-              </p>
-              <a 
-                href="https://courses.uwe.ac.uk/I4001/artificial-intelligence" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="course-link-button"
-              >
-                View Course Details
-                <span className="link-arrow">→</span>
-              </a>
-            </div>
-            <div className="education-card">
-              <div className="education-header">
-                <img src={`${import.meta.env.BASE_URL}aast-logo.png`} alt="AAST Logo" className="university-logo" onError={(e) => { e.target.style.display = 'none' }} />
-                <div>
-                  <h3>Bachelor of Engineering in Mechatronics</h3>
-                  <h4>Arab Academy for Science and Technology (AAST), Cairo, Egypt | Graduated: 2018</h4>
-                </div>
-              </div>
-              <p>
-                Coursework in programming, control systems, and embedded technologies.
-              </p>
-              <a 
-                href="https://aast.edu/en/programs-courses/program.php?unit_id=353&program_id=136&language_id=1" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="course-link-button"
-              >
-                View Course Details
-                <span className="link-arrow">→</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Skills Section */}
-      <section id="skills" className="section alt">
-        <div className="container">
-          <h2 className="section-title">Skills</h2>
-          <div className="skills-grid">
-            <div className="skill-category">
-              <h3>Languages & Frameworks</h3>
-              <div className="skill-items">
-                <span className="skill-tag"><FaCode className="skill-icon" /> C#</span>
-                <span className="skill-tag"><SiDotnet className="skill-icon" /> .NET Core</span>
-                <span className="skill-tag"><SiDotnet className="skill-icon" /> .NET 5/6/7</span>
-                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> ASP.NET</span>
-                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> ASP.NET Core</span>
-                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> Web API</span>
-                <span className="skill-tag"><SiNodedotjs className="skill-icon" /> REST</span>
-              </div>
-            </div>
-            <div className="skill-category">
-              <h3>Data & Persistence</h3>
-              <div className="skill-items">
-                <span className="skill-tag"><FaDatabase className="skill-icon" /> SQL Server</span>
-                <span className="skill-tag"><FaDatabase className="skill-icon" /> T-SQL</span>
-                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> Entity Framework</span>
-                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> LINQ</span>
-                <span className="skill-tag"><SiPostgresql className="skill-icon" /> PostgreSQL</span>
-                <span className="skill-tag"><SiMongodb className="skill-icon" /> MongoDB</span>
-              </div>
-            </div>
-            <div className="skill-category">
-              <h3>Tools & Dev Workflow</h3>
-              <div className="skill-items">
-                <span className="skill-tag"><SiGit className="skill-icon" /> Git</span>
-                <span className="skill-tag"><FaCloud className="skill-icon" /> Azure DevOps</span>
-                <span className="skill-tag"><SiGit className="skill-icon" /> CI/CD</span>
-                <span className="skill-tag"><SiDocker className="skill-icon" /> Docker</span>
-                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> Visual Studio</span>
-              </div>
-            </div>
-            <div className="skill-category">
-              <h3>Cloud & Monitoring</h3>
-              <div className="skill-items">
-                <span className="skill-tag"><FaCloud className="skill-icon" /> Azure App Services</span>
-                <span className="skill-tag"><FaCloud className="skill-icon" /> Azure Functions</span>
-                <span className="skill-tag"><FaCloud className="skill-icon" /> Azure Storage</span>
-                <span className="skill-tag"><FaCloud className="skill-icon" /> Application Insights</span>
-              </div>
-            </div>
-            <div className="skill-category">
-              <h3>Integrations & Platforms</h3>
-              <div className="skill-items">
-                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> SharePoint</span>
-                <span className="skill-tag"><FaCloud className="skill-icon" /> ServiceNow</span>
-                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> AgilePoint</span>
-                <span className="skill-tag"><SiNodedotjs className="skill-icon" /> REST Integrations</span>
-                <span className="skill-tag"><SiJson className="skill-icon" /> JSON</span>
-                <span className="skill-tag"><SiJson className="skill-icon" /> SOAP</span>
-              </div>
-            </div>
-            <div className="skill-category">
-              <h3>Testing & Quality</h3>
-              <div className="skill-items">
-                <span className="skill-tag"><SiJest className="skill-icon" /> Unit Testing</span>
-                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> xUnit</span>
-                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> NUnit</span>
-                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> Debugging</span>
-                <span className="skill-tag"><FaMicrosoft className="skill-icon" /> Serilog</span>
-                <span className="skill-tag"><SiGit className="skill-icon" /> Agile/Scrum</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Languages & Hobbies Section */}
-      <section id="languages" className="section">
-        <div className="container">
-          <h2 className="section-title">Languages & Hobbies</h2>
-          <div className="education-grid">
-            <div className="education-card">
-              <h3>Languages</h3>
-              <ul>
-                <li>English (Fluent)</li>
-                <li>Arabic (Fluent)</li>
-              </ul>
-            </div>
-            <div className="education-card">
-              <h3>Hobbies</h3>
-              <ul>
-                <li>Video Games</li>
-                <li>Basketball</li>
-                <li>Model Building</li>
-                <li>Watching Movies</li>
-                <li>Listening to Music</li>
-                <li>Reading</li>
-              </ul>
+          <h2 className="section-title">Projects</h2>
+          <div className="projects-grid">
+            <div className="project-placeholder">
+              <p>Projects coming soon...</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="section alt">
+      <section id="contact" className="contact-section">
         <div className="container">
-          <h2 className="section-title">Get In Touch</h2>
-          <div className="contact-content">
+          <h2 className="section-title">Let's talk</h2>
+          <div className="contact-wrapper">
             <div className="contact-info">
-              <p>
-                I'm always open to discussing new projects, creative ideas, or 
-                opportunities to be part of your visions. Feel free to reach out!
+              <h3 className="contact-subtitle">Contact</h3>
+              <p className="contact-description">
+                Have a project in mind? I'm currently available for full-time opportunities and collaborations. Let's build something impactful together.
               </p>
               <div className="contact-details">
-                <div className="contact-item">
-                  <strong>Email:</strong>
-                  <a href="mailto:karimali1896@gmail.com">karimali1896@gmail.com</a>
+                <p><strong>Location:</strong> Family City Compound - Fifth Settlement New Cairo - Cairo</p>
+                <p><strong>Email:</strong> <a href="mailto:karimali1896@gmail.com">karimali1896@gmail.com</a></p>
+                <p><strong>Phone:</strong> <a href="tel:+201018999261">01018999261</a></p>
+                <div className="social-links">
+                  <a href="https://www.linkedin.com/in/karim-elhakim-200725104/" target="_blank" rel="noopener noreferrer" className="social-link">LinkedIn</a>
                 </div>
-                <div className="contact-item">
-                  <strong>Phone:</strong>
-                  <a href="tel:+201018999261">01018999261</a>
-                </div>
-                <div className="contact-item">
-                  <strong>Location:</strong>
-                  <span>Family City Compound - Fifth Settlement New Cairo - Cairo</span>
-                </div>
-              </div>
-              <div className="social-links">
-                <a href="https://www.linkedin.com/in/karim-elhakim-200725104/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="LinkedIn">LinkedIn</a>
               </div>
             </div>
             <form className="contact-form" onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="name">Name</label>
-                <input type="text" id="name" name="name" required disabled={formStatus.loading} />
+                <input type="text" id="name" name="name" placeholder="Name" required disabled={formStatus.loading} />
               </div>
               <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input type="email" id="email" name="email" required disabled={formStatus.loading} />
+                <input type="email" id="email" name="email" placeholder="Email" required disabled={formStatus.loading} />
               </div>
               <div className="form-group">
-                <label htmlFor="message">Message</label>
-                <textarea id="message" name="message" rows="5" required disabled={formStatus.loading}></textarea>
+                <textarea id="message" name="message" rows="5" placeholder="Message" required disabled={formStatus.loading}></textarea>
               </div>
               {formStatus.message && (
                 <div className={`form-message ${formStatus.success ? 'success' : formStatus.error ? 'error' : ''}`}>
                   {formStatus.message}
                 </div>
               )}
-              <button type="submit" className="button primary" disabled={formStatus.loading}>
-                {formStatus.loading ? 'Sending...' : 'Send Message'}
+              <button type="submit" className="submit-button" disabled={formStatus.loading}>
+                {formStatus.loading ? 'Sending...' : 'Submit'}
               </button>
             </form>
           </div>
@@ -450,9 +404,7 @@ function App() {
       {/* Footer */}
       <footer className="footer">
         <div className="container">
-          <p>&copy; 2024 Karim Elhakim. All rights reserved.</p>
-          <p>Inspired by <a href="https://html5up.net/" target="_blank" rel="noopener noreferrer">HTML5 UP</a> templates</p>
-          <p>References available upon request</p>
+          <p>Built with Karim Elhakim 🚀</p>
         </div>
       </footer>
     </div>

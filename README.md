@@ -1,10 +1,10 @@
 # Karim Elhakim - Resume Website
 
-A personal resume website showcasing my professional experience, education, and skills as a Software Engineer & AI Specialist.
+My personal resume website showcasing my professional experience, education, and skills as a Software Engineer & AI Specialist.
 
 ## About
 
-This is my personal resume website, built with React and Vite. It presents my professional background, including:
+This website presents my professional background, including:
 
 - **Work Experience**: Software engineering roles at ITWORX
 - **Education**: Master's in Artificial Intelligence from UWE Bristol and Bachelor's in Mechatronics Engineering from AAST
