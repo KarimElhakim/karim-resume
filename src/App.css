@@ -1558,17 +1558,20 @@ html {
     gap: 0.75rem;
   }
 
-  .exp-carousel-btn-left {
-    left: 10px;
-  }
-
+  .exp-carousel-btn-left,
   .exp-carousel-btn-right {
-    right: 10px;
+    display: none !important;
   }
 
-  .exp-carousel-btn {
-    width: 40px;
-    height: 40px;
+  .exp-carousel-track {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .exp-card {
+    scroll-snap-align: start;
+    position: relative;
   }
 
   .tech-carousel-item {
