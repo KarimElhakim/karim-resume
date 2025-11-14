@@ -1549,21 +1549,16 @@ html {
     font-size: 1.5rem;
   }
 
-  .tech-belt-container {
-    height: 350px;
+  .tech-carousel-item {
+    padding: 1.5rem;
   }
 
-  .tech-belt {
-    width: 300px;
-    height: 300px;
+  .tech-carousel-icon {
+    font-size: 2rem;
   }
 
-  .tech-belt-icon {
-    font-size: 1.5rem;
-  }
-
-  .tech-belt-name {
-    font-size: 0.75rem;
+  .tech-carousel-name {
+    font-size: 1rem;
   }
 
   .terminal-body {
