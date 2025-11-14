@@ -3,7 +3,7 @@ import './App.css'
 import { FaDownload, FaGithub, FaEnvelope, FaLinkedin } from 'react-icons/fa'
 import AnimatedHero from './components/AnimatedHero'
 import TechStackCarousel from './components/TechStackCarousel'
-import ExperienceCarousel from './components/ExperienceCarousel'
+import ScrollStack, { ScrollStackItem } from './components/ScrollStack'
 import GitHubProjects from './components/GitHubProjects'
 import SplashCursor from './components/SplashCursor'
 import LiquidEther from './components/LiquidEther'
@@ -175,7 +175,65 @@ function App() {
       <section id="experience" className="challenges-section">
         <div className="container">
           <h2 className="section-title">How I Solve Your Development Challenges</h2>
-          <ExperienceCarousel />
+          <ScrollStack>
+            <ScrollStackItem>
+              <div className="exp-card-header">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="exp-card-icon">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <h3 className="exp-card-title">Backend Development</h3>
+              </div>
+              <ul className="exp-card-list">
+                <li><span className="bullet">•</span>Built scalable .NET Core applications with clean architecture and SOLID principles</li>
+                <li><span className="bullet">•</span>Developed RESTful APIs using ASP.NET Core Web API for enterprise applications</li>
+                <li><span className="bullet">•</span>Optimized SQL Server databases with efficient T-SQL queries and Entity Framework Core</li>
+                <li><span className="bullet">•</span>Implemented robust error handling, logging, and monitoring using Serilog and Application Insights</li>
+                <li><span className="bullet">•</span>Designed and maintained microservices architecture with Docker containerization</li>
+              </ul>
+            </ScrollStackItem>
+            <ScrollStackItem>
+              <div className="exp-card-header">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="exp-card-icon">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h4v11H3V10zm7-6h4v17h-4V4zm7 8h4v9h-4v-9z" />
+                </svg>
+                <h3 className="exp-card-title">Enterprise Integration & Support</h3>
+              </div>
+              <ul className="exp-card-list">
+                <li><span className="bullet">•</span>Integrated applications with SharePoint, ServiceNow, and AgilePoint for seamless workflow automation</li>
+                <li><span className="bullet">•</span>Resolved complex production issues by analyzing logs, testing fixes, and coordinating with QA teams</li>
+                <li><span className="bullet">•</span>Supported SharePoint migrations, ensuring content and access moved correctly</li>
+                <li><span className="bullet">•</span>Created comprehensive documentation and training materials for development teams</li>
+                <li><span className="bullet">•</span>Participated in sprint planning and code reviews to improve codebase quality</li>
+              </ul>
+            </ScrollStackItem>
+            <ScrollStackItem>
+              <div className="exp-card-header">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="exp-card-icon">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4h16v16H4V4zm8 8l4-4m-4 4l-4-4m4 4v4" />
+                </svg>
+                <h3 className="exp-card-title">Cloud & DevOps</h3>
+              </div>
+              <ul className="exp-card-list">
+                <li><span className="bullet">•</span>Deployed applications to Azure App Services and Azure Functions</li>
+                <li><span className="bullet">•</span>Set up CI/CD pipelines using Azure DevOps for automated builds and deployments</li>
+                <li><span className="bullet">•</span>Managed containerized services with Docker for consistent development and production environments</li>
+                <li><span className="bullet">•</span>Configured Azure Storage and Application Insights for monitoring and analytics</li>
+              </ul>
+            </ScrollStackItem>
+            <ScrollStackItem>
+              <div className="exp-card-header">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="exp-card-icon">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+                <h3 className="exp-card-title">AI & Machine Learning</h3>
+              </div>
+              <ul className="exp-card-list">
+                <li><span className="bullet">•</span>Completed Master's in Artificial Intelligence with focus on Machine Learning and Data Engineering</li>
+                <li><span className="bullet">•</span>Applied AI techniques for backend integration and automation</li>
+                <li><span className="bullet">•</span>Worked on optimization and automation using AI models</li>
+              </ul>
+            </ScrollStackItem>
+          </ScrollStack>
           
           <div className="challenges-accordion" style={{ display: 'none' }}>
             {[

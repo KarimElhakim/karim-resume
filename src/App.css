@@ -145,7 +145,7 @@ body {
   justify-content: center;
   text-align: center;
   padding: 8rem 2rem 4rem;
-  background: var(--bg-primary);
+  background: transparent;
   position: relative;
   z-index: 2;
 }
@@ -812,7 +812,15 @@ body {
 /* Challenges Section */
 .challenges-section {
   padding: 6rem 2rem;
-  background: var(--bg-primary);
+  background: transparent;
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+}
+
+.challenges-section .container {
+  height: 100vh;
+  max-height: 800px;
 }
 
 .challenges-accordion {

@@ -1,4 +1,5 @@
 import PixelBlast from './PixelBlast'
+import Shuffle from './Shuffle'
 
 const AnimatedHero = () => {
   return (
@@ -26,10 +27,50 @@ const AnimatedHero = () => {
           />
         </div>
         <div className="hero-text-content">
-          <h1 className="hero-title-main">Hi, I'm Karim Elhakim</h1>
-          <h2 className="hero-subtitle-main">Software Engineer & AI Specialist</h2>
+          <h1 className="hero-title-main">
+            <Shuffle
+              text="Hi, I'm Karim Elhakim"
+              shuffleDirection="right"
+              duration={0.35}
+              animationMode="evenodd"
+              shuffleTimes={1}
+              ease="power3.out"
+              stagger={0.03}
+              threshold={0.1}
+              triggerOnce={true}
+              triggerOnHover={true}
+              respectReducedMotion={true}
+            />
+          </h1>
+          <h2 className="hero-subtitle-main">
+            <Shuffle
+              text="Software Engineer & AI Specialist"
+              shuffleDirection="right"
+              duration={0.35}
+              animationMode="evenodd"
+              shuffleTimes={1}
+              ease="power3.out"
+              stagger={0.03}
+              threshold={0.1}
+              triggerOnce={true}
+              triggerOnHover={true}
+              respectReducedMotion={true}
+            />
+          </h2>
           <p className="hero-description-main">
-            Software Engineer | Backend Developer | AI Specialist | B.Sc. Mechatronics Engineering | M.Sc. Artificial Intelligence
+            <Shuffle
+              text="Software Engineer | Backend Developer | AI Specialist | B.Sc. Mechatronics Engineering | M.Sc. Artificial Intelligence"
+              shuffleDirection="right"
+              duration={0.35}
+              animationMode="evenodd"
+              shuffleTimes={1}
+              ease="power3.out"
+              stagger={0.03}
+              threshold={0.1}
+              triggerOnce={true}
+              triggerOnHover={true}
+              respectReducedMotion={true}
+            />
           </p>
         </div>
       </div>
