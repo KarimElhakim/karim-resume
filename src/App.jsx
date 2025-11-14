@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import './App.css'
-import { FaDownload, FaBars, FaTimes, FaGithub, FaEnvelope, FaLinkedin } from 'react-icons/fa'
+import { FaDownload, FaGithub, FaEnvelope, FaLinkedin } from 'react-icons/fa'
 import AnimatedHero from './components/AnimatedHero'
 import TechStackCarousel from './components/TechStackCarousel'
 import ExperienceCarousel from './components/ExperienceCarousel'
 import GitHubProjects from './components/GitHubProjects'
 import SplashCursor from './components/SplashCursor'
+import LiquidEther from './components/LiquidEther'
+import CardNav from './components/CardNav'
 
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -87,23 +89,65 @@ function App() {
   }
 
 
+  const navItems = [
+    {
+      label: 'Home',
+      bgColor: '#0D0716',
+      textColor: '#fff',
+      links: [
+        { label: 'About', ariaLabel: 'About Karim' },
+        { label: 'Skills', ariaLabel: 'View Skills' }
+      ]
+    },
+    {
+      label: 'Experience',
+      bgColor: '#170D27',
+      textColor: '#fff',
+      links: [
+        { label: 'Work History', ariaLabel: 'Work Experience' },
+        { label: 'Projects', ariaLabel: 'View Projects' }
+      ]
+    },
+    {
+      label: 'Contact',
+      bgColor: '#271E37',
+      textColor: '#fff',
+      links: [
+        { label: 'Email', ariaLabel: 'Email Karim' },
+        { label: 'LinkedIn', ariaLabel: 'LinkedIn Profile' },
+        { label: 'GitHub', ariaLabel: 'GitHub Profile' }
+      ]
+    }
+  ]
+
   return (
     <div className="App">
+      <LiquidEther
+        colors={['#5227FF', '#FF9FFC', '#B19EEF']}
+        mouseForce={20}
+        cursorSize={100}
+        isViscous={false}
+        viscous={30}
+        iterationsViscous={32}
+        iterationsPoisson={32}
+        resolution={0.5}
+        isBounce={false}
+        autoDemo={true}
+        autoSpeed={0.5}
+        autoIntensity={2.2}
+        takeoverDuration={0.25}
+        autoResumeDelay={3000}
+        autoRampDuration={0.6}
+      />
       <SplashCursor />
-      {/* Header/Navigation */}
-      <header className="header-glass">
-        <nav className="nav-glass">
-          <div className="nav-scroll-container">
-            <ul className="nav-menu-glass">
-              <li><a href="#home" className="nav-link-glass active" onClick={() => setIsMobileMenuOpen(false)}>Home</a></li>
-              <li><a href="#experience" className="nav-link-glass" onClick={() => setIsMobileMenuOpen(false)}>Experience</a></li>
-              <li><a href="#projects" className="nav-link-glass" onClick={() => setIsMobileMenuOpen(false)}>Projects</a></li>
-              <li><a href="/Karim Elhakim Resume (EG).pdf" className="nav-link-glass" download onClick={() => setIsMobileMenuOpen(false)}>Resume</a></li>
-              <li><a href="#contact" className="nav-link-glass" onClick={() => setIsMobileMenuOpen(false)}>Contact</a></li>
-            </ul>
-          </div>
-        </nav>
-      </header>
+      <CardNav
+        items={navItems}
+        baseColor="#fff"
+        menuColor="#000"
+        buttonBgColor="#111"
+        buttonTextColor="#fff"
+        ease="power3.out"
+      />
 
       {/* Hero Section */}
       <section id="home" className="hero">

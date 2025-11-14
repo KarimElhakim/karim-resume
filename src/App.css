@@ -147,6 +147,61 @@ body {
   padding: 8rem 2rem 4rem;
   background: var(--bg-primary);
   position: relative;
+  z-index: 2;
+}
+
+.pixel-hero {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pixel-hero-overlay {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.hero-text-content {
+  position: relative;
+  z-index: 4;
+  text-align: center;
+  padding: 2rem;
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hero-title-main {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--accent);
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.hero-subtitle-main {
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.hero-description-main {
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .hero-download {
@@ -1553,5 +1608,106 @@ html {
 
   .hero-line {
     font-size: 0.9rem;
+  }
+
+  .hero {
+    padding: 6rem 1rem 3rem;
+    min-height: 100vh;
+  }
+
+  .hero-text-content {
+    padding: 1.5rem;
+    margin: 0 1rem;
+  }
+
+  .hero-title-main {
+    font-size: 1.75rem;
+  }
+
+  .hero-subtitle-main {
+    font-size: 1.1rem;
+  }
+
+  .hero-description-main {
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .work-item,
+  .education-item {
+    padding: 1.25rem;
+  }
+
+  .work-title,
+  .education-degree {
+    font-size: 1.25rem;
+  }
+
+  .work-company,
+  .education-institution {
+    font-size: 0.9rem;
+  }
+
+  .exp-card {
+    padding: 1.25rem;
+  }
+
+  .exp-card-title {
+    font-size: 1.25rem;
+  }
+
+  .project-card {
+    padding: 1.25rem;
+  }
+
+  .contact-wrapper {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .contact-form {
+    padding: 1.5rem;
+  }
+
+  .tech-scroll-container {
+    margin-top: 2rem;
+  }
+
+  .tech-scroll-item {
+    gap: 0.5rem;
+  }
+
+  .tech-scroll-icon {
+    height: 1.5rem;
+  }
+
+  .tech-scroll-name {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-title-main {
+    font-size: 1.5rem;
+  }
+
+  .hero-subtitle-main {
+    font-size: 1rem;
+  }
+
+  .hero-description-main {
+    font-size: 0.8rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
   }
 }
