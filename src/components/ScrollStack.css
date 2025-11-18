@@ -243,11 +243,6 @@
     width: 20px;
     height: 20px;
   }
-
-  .scroll-stack-indicator.active .indicator-dot {
-    width: 20px;
-    height: 20px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -274,11 +269,6 @@
     width: 14px;
     height: 14px;
     border-width: 2px;
-  }
-
-  .scroll-stack-indicator.active .indicator-dot {
-    width: 18px;
-    height: 18px;
   }
 
   .scroll-stack-indicator.active .indicator-dot {
