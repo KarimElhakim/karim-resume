@@ -38,128 +38,104 @@ const ScrollStack = ({ children, icons = [], className = '' }) => {
   }
 
   useEffect(() => {
-    let scrollTimeout
-    
-    const handleScroll = () => {
-      if (!containerRef.current || isScrollingRef.current) return
-
-      clearTimeout(scrollTimeout)
-      scrollTimeout = setTimeout(() => {
-        const container = containerRef.current
-        if (!container) return
-
-        const scrollTop = container.scrollTop
-        const containerHeight = container.clientHeight
-        const scrollCenter = scrollTop + containerHeight / 2
-
-        // Find which item is closest to the center of the viewport
-        let closestIndex = 0
-        let closestDistance = Infinity
-
-        Children.forEach(children, (child, index) => {
-          if (child.type !== ScrollStackItem) return
-          
-          const itemElement = itemsRef.current[index]
-          if (!itemElement) return
-
-          const itemTop = itemElement.offsetTop
-          const itemHeight = itemElement.offsetHeight
-          const itemCenter = itemTop + itemHeight / 2
-
-          const distance = Math.abs(scrollCenter - itemCenter)
-          if (distance < closestDistance) {
-            closestDistance = distance
-            closestIndex = index
-          }
-        })
-
-        if (closestIndex !== activeIndex) {
-          setActiveIndex(closestIndex)
-        }
-      }, 100)
-    }
-
-    const container = containerRef.current
-    if (container) {
-      container.addEventListener('scroll', handleScroll, { passive: true })
-      
-      // Initial check after DOM is ready
-      const timeoutId = setTimeout(() => {
-        handleScroll()
-      }, 300)
-      
-      // Also check on resize
-      const handleResize = () => {
-        setTimeout(handleScroll, 100)
-      }
-      window.addEventListener('resize', handleResize, { passive: true })
-      
-      return () => {
-        container.removeEventListener('scroll', handleScroll)
-        window.removeEventListener('resize', handleResize)
-        clearTimeout(timeoutId)
-        clearTimeout(scrollTimeout)
-      }
-    }
-  }, [children, activeIndex])
-
-  // Prevent skipping - enforce scroll snap
-  useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
+    let rafId = null
     let lastScrollTop = container.scrollTop
-    let scrollVelocity = 0
-    let lastTime = Date.now()
 
-    const handleScroll = () => {
-      const currentTime = Date.now()
-      const currentScrollTop = container.scrollTop
-      const deltaTime = currentTime - lastTime
-      
-      if (deltaTime > 0) {
-        scrollVelocity = Math.abs(currentScrollTop - lastScrollTop) / deltaTime
+    const updateActiveIndex = () => {
+      if (!container || isScrollingRef.current) return
+
+      const scrollTop = container.scrollTop
+      const containerHeight = container.clientHeight
+      const scrollCenter = scrollTop + containerHeight / 2
+
+      let closestIndex = 0
+      let closestDistance = Infinity
+
+      Children.forEach(children, (child, index) => {
+        if (child.type !== ScrollStackItem) return
+        
+        const itemElement = itemsRef.current[index]
+        if (!itemElement) return
+
+        const rect = itemElement.getBoundingClientRect()
+        const containerRect = container.getBoundingClientRect()
+        const itemCenter = rect.top - containerRect.top + rect.height / 2
+        const containerCenter = containerHeight / 2
+
+        const distance = Math.abs(itemCenter - containerCenter)
+        if (distance < closestDistance) {
+          closestDistance = distance
+          closestIndex = index
+        }
+      })
+
+      if (closestIndex !== activeIndex) {
+        setActiveIndex(closestIndex)
       }
-
-      // If scrolling too fast, snap to nearest card
-      if (scrollVelocity > 2 && !isScrollingRef.current) {
-        clearTimeout(scrollTimeoutRef.current)
-        scrollTimeoutRef.current = setTimeout(() => {
-          const containerHeight = container.clientHeight
-          const scrollTop = container.scrollTop
-          const scrollCenter = scrollTop + containerHeight / 2
-
-          let closestIndex = 0
-          let closestDistance = Infinity
-
-          Children.forEach(children, (child, index) => {
-            if (child.type !== ScrollStackItem) return
-            
-            const itemElement = itemsRef.current[index]
-            if (!itemElement) return
-
-            const itemTop = itemElement.offsetTop
-            const itemHeight = itemElement.offsetHeight
-            const itemCenter = itemTop + itemHeight / 2
-
-            const distance = Math.abs(scrollCenter - itemCenter)
-            if (distance < closestDistance) {
-              closestDistance = distance
-              closestIndex = index
-            }
-          })
-
-          scrollToIndex(closestIndex)
-        }, 200)
-      }
-
-      lastScrollTop = currentScrollTop
-      lastTime = currentTime
     }
 
+    const handleScroll = () => {
+      if (rafId) return
+      
+      rafId = requestAnimationFrame(() => {
+        updateActiveIndex()
+        rafId = null
+      })
+    }
+
+    // Use IntersectionObserver for better performance
+    const observerOptions = {
+      root: container,
+      rootMargin: '-40% 0px -40% 0px',
+      threshold: [0, 0.5, 1]
+    }
+
+    const observerCallback = (entries) => {
+      if (isScrollingRef.current) return
+      
+      entries.forEach((entry) => {
+        const index = itemsRef.current.indexOf(entry.target)
+        if (index === -1) return
+
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          setActiveIndex(index)
+        }
+      })
+    }
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions)
+    
+    // Observe all items
+    itemsRef.current.forEach((item) => {
+      if (item) observer.observe(item)
+    })
+
     container.addEventListener('scroll', handleScroll, { passive: true })
-    return () => container.removeEventListener('scroll', handleScroll)
-  }, [children])
+    
+    // Initial check
+    const timeoutId = setTimeout(() => {
+      updateActiveIndex()
+    }, 100)
+    
+    // Check on resize
+    const handleResize = () => {
+      requestAnimationFrame(() => {
+        updateActiveIndex()
+      })
+    }
+    window.addEventListener('resize', handleResize, { passive: true })
+    
+    return () => {
+      container.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleResize)
+      if (rafId) cancelAnimationFrame(rafId)
+      clearTimeout(timeoutId)
+      observer.disconnect()
+    }
+  }, [children, activeIndex])
 
   // Set initial active index to 0
   useEffect(() => {

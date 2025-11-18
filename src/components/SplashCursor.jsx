@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function SplashCursor({
   SIM_RESOLUTION = 128,
@@ -17,6 +17,8 @@ function SplashCursor({
   TRANSPARENT = true
 }) {
   const canvasRef = useRef(null);
+  const cursorRef = useRef(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -996,13 +998,18 @@ function SplashCursor({
       document.body.removeEventListener('mousemove', handleFirstMouseMove);
     });
 
-    window.addEventListener('mousemove', e => {
+    const handleMouseMove = (e) => {
       let pointer = pointers[0];
       let posX = scaleByPixelRatio(e.clientX);
       let posY = scaleByPixelRatio(e.clientY);
       let color = pointer.color;
       updatePointerMoveData(pointer, posX, posY, color);
-    });
+      
+      // Update visible cursor position
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
 
     document.body.addEventListener('touchstart', function handleFirstTouchStart(e) {
       const touches = e.targetTouches;
@@ -1070,28 +1077,81 @@ function SplashCursor({
     TRANSPARENT
   ]);
 
+  // Smooth cursor following
+  useEffect(() => {
+    if (!cursorRef.current) return;
+
+    const cursor = cursorRef.current;
+    let rafId = null;
+    let currentX = mousePos.x;
+    let currentY = mousePos.y;
+
+    const updateCursor = () => {
+      const dx = mousePos.x - currentX;
+      const dy = mousePos.y - currentY;
+      
+      currentX += dx * 0.15;
+      currentY += dy * 0.15;
+      
+      cursor.style.left = `${currentX}px`;
+      cursor.style.top = `${currentY}px`;
+      
+      rafId = requestAnimationFrame(updateCursor);
+    };
+
+    rafId = requestAnimationFrame(updateCursor);
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [mousePos]);
+
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        zIndex: 50,
-        pointerEvents: 'none',
-        width: '100%',
-        height: '100%'
-      }}
-    >
-      <canvas
-        ref={canvasRef}
-        id="fluid"
+    <>
+      {/* Visible Cursor */}
+      <div
+        ref={cursorRef}
+        className="splash-cursor-visual"
         style={{
-          width: '100vw',
-          height: '100vh',
-          display: 'block'
+          position: 'fixed',
+          left: `${mousePos.x}px`,
+          top: `${mousePos.y}px`,
+          width: '20px',
+          height: '20px',
+          borderRadius: '50%',
+          border: '2px solid rgba(0, 212, 255, 0.8)',
+          background: 'rgba(0, 212, 255, 0.2)',
+          pointerEvents: 'none',
+          zIndex: 9999,
+          transform: 'translate(-50%, -50%)',
+          transition: 'opacity 0.2s ease',
+          boxShadow: '0 0 20px rgba(0, 212, 255, 0.5)'
         }}
       />
-    </div>
+      
+      {/* Splash Canvas */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: 50,
+          pointerEvents: 'none',
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        <canvas
+          ref={canvasRef}
+          id="fluid"
+          style={{
+            width: '100vw',
+            height: '100vh',
+            display: 'block'
+          }}
+        />
+      </div>
+    </>
   );
 }
 

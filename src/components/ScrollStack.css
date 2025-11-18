@@ -153,11 +153,17 @@
 }
 
 .scroll-stack-item-wrapper.active {
-  opacity: 1;
-  transform: scale(1);
+  opacity: 1 !important;
+  transform: scale(1) !important;
   z-index: 1;
-  filter: blur(0);
+  filter: blur(0) !important;
   pointer-events: all;
+}
+
+.scroll-stack-item-wrapper:not(.active) {
+  opacity: 0.25;
+  transform: scale(0.9);
+  filter: blur(3px);
 }
 
 .scroll-stack-item {
