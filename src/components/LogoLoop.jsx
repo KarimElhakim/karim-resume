@@ -26,9 +26,18 @@ const LogoLoop = ({
     const itemWidth = logoHeight + gap
     const totalWidth = duplicatedLogos.length * itemWidth
     const speedPerFrame = speed / 60 // Convert to pixels per frame at 60fps
+    let lastFrameTime = performance.now()
 
-    const animate = () => {
-      const currentSpeed = isHoveredRef.current && hoverSpeed > 0 ? hoverSpeed : speedPerFrame
+    const animate = (currentTime) => {
+      // Throttle to ~60fps max
+      const deltaTime = currentTime - lastFrameTime
+      if (deltaTime < 16) {
+        animationFrameRef.current = requestAnimationFrame(animate)
+        return
+      }
+      lastFrameTime = currentTime
+
+      const currentSpeed = isHoveredRef.current && hoverSpeed > 0 ? hoverSpeed / 60 : speedPerFrame
       
       if (direction === 'left') {
         positionRef.current -= currentSpeed

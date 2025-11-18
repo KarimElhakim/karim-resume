@@ -77,13 +77,17 @@ const ScrollStack = ({ children, icons = [], className = '' }) => {
       }
     }
 
+    let scrollTimeout
     const handleScroll = () => {
       if (rafId) return
       
-      rafId = requestAnimationFrame(() => {
-        updateActiveIndex()
-        rafId = null
-      })
+      clearTimeout(scrollTimeout)
+      scrollTimeout = setTimeout(() => {
+        rafId = requestAnimationFrame(() => {
+          updateActiveIndex()
+          rafId = null
+        })
+      }, 50) // Debounce scroll events
     }
 
     // Use IntersectionObserver for better performance
@@ -96,13 +100,16 @@ const ScrollStack = ({ children, icons = [], className = '' }) => {
     const observerCallback = (entries) => {
       if (isScrollingRef.current) return
       
-      entries.forEach((entry) => {
-        const index = itemsRef.current.indexOf(entry.target)
-        if (index === -1) return
+      // Use requestAnimationFrame to batch updates
+      requestAnimationFrame(() => {
+        entries.forEach((entry) => {
+          const index = itemsRef.current.indexOf(entry.target)
+          if (index === -1) return
 
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-          setActiveIndex(index)
-        }
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+            setActiveIndex(index)
+          }
+        })
       })
     }
 
@@ -120,11 +127,15 @@ const ScrollStack = ({ children, icons = [], className = '' }) => {
       updateActiveIndex()
     }, 100)
     
-    // Check on resize
+    // Check on resize - debounced
+    let resizeTimeout
     const handleResize = () => {
-      requestAnimationFrame(() => {
-        updateActiveIndex()
-      })
+      clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(() => {
+        requestAnimationFrame(() => {
+          updateActiveIndex()
+        })
+      }, 150)
     }
     window.addEventListener('resize', handleResize, { passive: true })
     
@@ -133,6 +144,8 @@ const ScrollStack = ({ children, icons = [], className = '' }) => {
       window.removeEventListener('resize', handleResize)
       if (rafId) cancelAnimationFrame(rafId)
       clearTimeout(timeoutId)
+      clearTimeout(scrollTimeout)
+      if (resizeTimeout) clearTimeout(resizeTimeout)
       observer.disconnect()
     }
   }, [children, activeIndex])

@@ -28,16 +28,20 @@ const LiquidEther = ({
     const ctx = canvas.getContext('2d')
     let animationId
 
+    let resizeTimeout
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(() => {
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+      }, 150)
     }
     resizeCanvas()
-    window.addEventListener('resize', resizeCanvas)
+    window.addEventListener('resize', resizeCanvas, { passive: true })
 
-    // Simple liquid ether effect
+    // Simple liquid ether effect - optimized
     const particles = []
-    const particleCount = 50
+    const particleCount = 30 // Reduced from 50
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
@@ -52,6 +56,7 @@ const LiquidEther = ({
 
     let mouseX = canvas.width / 2
     let mouseY = canvas.height / 2
+    let lastFrameTime = performance.now()
 
     const handleMouseMove = (e) => {
       const rect = canvas.getBoundingClientRect()
@@ -59,14 +64,23 @@ const LiquidEther = ({
       mouseY = e.clientY - rect.top
     }
 
-    const animate = () => {
+    const animate = (currentTime) => {
+      // Throttle to ~30fps for background effect
+      const deltaTime = currentTime - lastFrameTime
+      if (deltaTime < 33) {
+        animationId = requestAnimationFrame(animate)
+        return
+      }
+      lastFrameTime = currentTime
+
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       particles.forEach((particle, i) => {
         // Mouse interaction
         const dx = mouseX - particle.x
         const dy = mouseY - particle.y
-        const distance = Math.sqrt(dx * dx + dy * dy)
+        const distanceSq = dx * dx + dy * dy // Use squared distance to avoid sqrt
+        const distance = Math.sqrt(distanceSq)
         const force = mouseForce / (distance + 1)
 
         if (distance < cursorSize) {
@@ -95,22 +109,27 @@ const LiquidEther = ({
           particle.vy *= (100 - viscous) / 100
         }
 
-        // Draw connections
-        particles.slice(i + 1).forEach(otherParticle => {
+        // Draw connections - optimized with distance check
+        const maxConnectionDist = 150
+        const maxConnectionDistSq = maxConnectionDist * maxConnectionDist
+        
+        for (let j = i + 1; j < particles.length; j++) {
+          const otherParticle = particles[j]
           const dx = particle.x - otherParticle.x
           const dy = particle.y - otherParticle.y
-          const distance = Math.sqrt(dx * dx + dy * dy)
+          const distSq = dx * dx + dy * dy
 
-          if (distance < 150) {
+          if (distSq < maxConnectionDistSq) {
+            const dist = Math.sqrt(distSq)
             ctx.beginPath()
             ctx.strokeStyle = particle.color
-            ctx.globalAlpha = 1 - distance / 150
+            ctx.globalAlpha = (1 - dist / maxConnectionDist) * 0.5
             ctx.lineWidth = 1
             ctx.moveTo(particle.x, particle.y)
             ctx.lineTo(otherParticle.x, otherParticle.y)
             ctx.stroke()
           }
-        })
+        }
 
         // Draw particle
         ctx.beginPath()

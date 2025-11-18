@@ -6,19 +6,13 @@
   box-sizing: border-box;
 }
 
-/* Optimize animations for 60fps */
-*,
-*::before,
-*::after {
-  will-change: auto;
+/* Optimize animations - only set will-change on actively animating elements */
+.logo-loop-track {
+  will-change: transform;
 }
 
-.tech-carousel-track,
-.exp-carousel-track,
-.hero-char,
-.cursor-trail,
-.custom-cursor {
-  will-change: transform, opacity;
+.scroll-stack-item-wrapper {
+  will-change: opacity, transform, filter;
 }
 
 :root {

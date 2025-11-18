@@ -1,18 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 
 function SplashCursor({
-  SIM_RESOLUTION = 128,
-  DYE_RESOLUTION = 1440,
-  CAPTURE_RESOLUTION = 512,
+  SIM_RESOLUTION = 64,
+  DYE_RESOLUTION = 512,
+  CAPTURE_RESOLUTION = 256,
   DENSITY_DISSIPATION = 3.5,
   VELOCITY_DISSIPATION = 2,
   PRESSURE = 0.1,
-  PRESSURE_ITERATIONS = 20,
-  CURL = 3,
+  PRESSURE_ITERATIONS = 10,
+  CURL = 2,
   SPLAT_RADIUS = 0.2,
   SPLAT_FORCE = 6000,
   SHADING = true,
-  COLOR_UPDATE_SPEED = 10,
+  COLOR_UPDATE_SPEED = 15,
   BACK_COLOR = { r: 0.5, g: 0, b: 0 },
   TRANSPARENT = true
 }) {
@@ -998,6 +998,7 @@ function SplashCursor({
       document.body.removeEventListener('mousemove', handleFirstMouseMove);
     });
 
+    let mouseMoveTimeout
     const handleMouseMove = (e) => {
       let pointer = pointers[0];
       let posX = scaleByPixelRatio(e.clientX);
@@ -1005,11 +1006,16 @@ function SplashCursor({
       let color = pointer.color;
       updatePointerMoveData(pointer, posX, posY, color);
       
-      // Update visible cursor position
-      setMousePos({ x: e.clientX, y: e.clientY });
+      // Throttle visible cursor updates
+      if (!mouseMoveTimeout) {
+        mouseMoveTimeout = requestAnimationFrame(() => {
+          setMousePos({ x: e.clientX, y: e.clientY });
+          mouseMoveTimeout = null
+        })
+      }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     document.body.addEventListener('touchstart', function handleFirstTouchStart(e) {
       const touches = e.targetTouches;
@@ -1059,6 +1065,7 @@ function SplashCursor({
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      if (mouseMoveTimeout) cancelAnimationFrame(mouseMoveTimeout);
     };
   }, [
     SIM_RESOLUTION,
@@ -1077,7 +1084,7 @@ function SplashCursor({
     TRANSPARENT
   ]);
 
-  // Smooth cursor following
+  // Smooth cursor following - throttled for performance
   useEffect(() => {
     if (!cursorRef.current) return;
 
@@ -1085,16 +1092,27 @@ function SplashCursor({
     let rafId = null;
     let currentX = mousePos.x;
     let currentY = mousePos.y;
+    let lastUpdate = 0;
 
-    const updateCursor = () => {
+    const updateCursor = (timestamp) => {
+      // Throttle to ~30fps for cursor
+      if (timestamp - lastUpdate < 33) {
+        rafId = requestAnimationFrame(updateCursor);
+        return;
+      }
+      lastUpdate = timestamp;
+
       const dx = mousePos.x - currentX;
       const dy = mousePos.y - currentY;
       
-      currentX += dx * 0.15;
-      currentY += dy * 0.15;
-      
-      cursor.style.left = `${currentX}px`;
-      cursor.style.top = `${currentY}px`;
+      // Only update if movement is significant
+      if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) {
+        currentX += dx * 0.2;
+        currentY += dy * 0.2;
+        
+        cursor.style.left = `${currentX}px`;
+        cursor.style.top = `${currentY}px`;
+      }
       
       rafId = requestAnimationFrame(updateCursor);
     };
