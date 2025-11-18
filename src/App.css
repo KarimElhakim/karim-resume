@@ -404,12 +404,7 @@ body {
 }
 
 /* Tech Stack Section */
-  .tech-logo-loop-wrapper {
-    height: 120px;
-    margin: 1.5rem 0;
-  }
-
-  .tech-stack-section {
+.tech-stack-section {
   padding: 6rem 2rem;
   background: transparent;
   position: relative;
@@ -418,7 +413,7 @@ body {
 
 .tech-logo-loop-wrapper {
   width: 100%;
-  height: 180px;
+  height: 160px;
   position: relative;
   overflow: hidden;
   margin: 3rem 0;
@@ -1502,6 +1497,11 @@ html {
     padding: 6rem 1.5rem 3rem;
   }
 
+  .tech-logo-loop-wrapper {
+    height: 130px;
+    margin: 2rem 0;
+  }
+
   .tech-stack-section,
   .challenges-section,
   .work-experience-section,
@@ -1564,6 +1564,11 @@ html {
 
   .hero {
     padding: 5rem 1rem 2rem;
+  }
+
+  .tech-logo-loop-wrapper {
+    height: 110px;
+    margin: 1.5rem 0;
   }
 
   .tech-stack-section,
