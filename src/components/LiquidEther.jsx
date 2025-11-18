@@ -149,6 +149,7 @@ const LiquidEther = ({
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('resize', resizeCanvas)
       if (animationId) cancelAnimationFrame(animationId)
+      if (resizeTimeout) clearTimeout(resizeTimeout)
     }
   }, [colors, mouseForce, cursorSize, isViscous, viscous, isBounce])
 

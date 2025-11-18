@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import LogoLoop from './LogoLoop'
 import { 
   SiDotnet, SiPostgresql, SiMongodb, SiGit, SiDocker, SiJest, SiVite,
@@ -8,7 +9,7 @@ import {
 import { FaMicrosoft, FaCode, FaDatabase, FaCloud, FaServer } from 'react-icons/fa'
 
 const TechStackCarousel = () => {
-  const techLogos = [
+  const techLogos = useMemo(() => [
     { node: <SiReact style={{ color: '#61DAFB' }} />, title: 'React', href: 'https://react.dev' },
     { node: <SiNextdotjs style={{ color: '#000000' }} />, title: 'Next.js', href: 'https://nextjs.org' },
     { node: <SiTypescript style={{ color: '#3178C6' }} />, title: 'TypeScript', href: 'https://www.typescriptlang.org' },
@@ -35,7 +36,7 @@ const TechStackCarousel = () => {
     { node: <SiEslint style={{ color: '#4B32C3' }} />, title: 'ESLint', href: 'https://eslint.org' },
     { node: <SiPrettier style={{ color: '#F7B93E' }} />, title: 'Prettier', href: 'https://prettier.io' },
     { node: <SiJest style={{ color: '#C21325' }} />, title: 'Jest', href: 'https://jestjs.io' },
-  ]
+  ], [])
 
   return (
     <div className="tech-logo-loop-wrapper">
