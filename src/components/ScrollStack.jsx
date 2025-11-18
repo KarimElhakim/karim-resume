@@ -18,50 +18,7 @@ const ScrollStack = ({ children, icons = [], className = '' }) => {
 
   const itemCount = Children.count(children)
   
-  // Extract icons and titles from children if not provided
-  const getIconForIndex = (index) => {
-    if (icons && icons[index]) {
-      return icons[index]
-    }
-    // Try to extract icon from child's content
-    const child = Children.toArray(children)[index]
-    if (child && child.props && child.props.children) {
-      const childrenArray = Children.toArray(child.props.children)
-      const headerElement = childrenArray.find(el => 
-        el && el.props && el.props.className && el.props.className.includes('exp-card-header')
-      )
-      if (headerElement && headerElement.props && headerElement.props.children) {
-        const headerChildren = Children.toArray(headerElement.props.children)
-        const iconElement = headerChildren.find(el => 
-          el && el.type === 'svg'
-        )
-        if (iconElement) {
-          return iconElement
-        }
-      }
-    }
-    return null
-  }
 
-  const getTitleForIndex = (index) => {
-    const child = Children.toArray(children)[index]
-    if (child && child.props && child.props.children) {
-      const childrenArray = Children.toArray(child.props.children)
-      const headerElement = childrenArray.find(el => 
-        el && el.props && el.props.className && el.props.className.includes('exp-card-header')
-      )
-      if (headerElement && headerElement.props && headerElement.props.children) {
-        const headerChildren = Children.toArray(headerElement.props.children)
-        const titleElement = headerChildren.find(el => 
-          el && el.type === 'h3' && el.props && el.props.className && el.props.className.includes('exp-card-title')
-        )
-        if (titleElement && titleElement.props && titleElement.props.children) {
-          return titleElement.props.children
-        }
-      }
-    }
-    return `Card ${index + 1}`
-  }
 
   const scrollToIndex = (index) => {
     if (!containerRef.current || index < 0 || index >= itemCount) return
@@ -211,35 +168,22 @@ const ScrollStack = ({ children, icons = [], className = '' }) => {
 
   return (
     <div className="scroll-stack-wrapper">
-      {/* Navigation Indicators - Full Logo Icons */}
+      {/* Navigation Indicators - Animated Dots */}
       <div className="scroll-stack-indicators">
         {Children.map(children, (child, index) => {
           if (child.type !== ScrollStackItem) return null
-          
-          const icon = getIconForIndex(index)
-          const title = getTitleForIndex(index)
           
           return (
             <button
               key={index}
               className={`scroll-stack-indicator ${index === activeIndex ? 'active' : ''}`}
               onClick={() => scrollToIndex(index)}
-              aria-label={`Go to ${title}`}
-              data-title={title}
+              aria-label={`Go to card ${index + 1}`}
+              title={`Card ${index + 1}`}
             >
-              <div className="indicator-icon-wrapper">
-                {icon ? (
-                  <div className="indicator-icon">
-                    {icon}
-                  </div>
-                ) : (
-                  <span className="indicator-dot">
-                    <span className="indicator-pulse"></span>
-                  </span>
-                )}
+              <span className="indicator-dot">
                 <span className="indicator-pulse"></span>
-              </div>
-              <div className="indicator-tooltip">{title}</div>
+              </span>
             </button>
           )
         })}

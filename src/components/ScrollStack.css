@@ -26,10 +26,10 @@
 .scroll-stack-indicators {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1rem;
   position: sticky;
   top: 50%;
   transform: translateY(-50%);
@@ -39,8 +39,8 @@
 
 .scroll-stack-indicator {
   position: relative;
-  width: 256px;
-  height: 256px;
+  width: 28px;
+  height: 28px;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -48,65 +48,7 @@
   align-items: center;
   justify-content: center;
   transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  padding: 16px;
-  border-radius: 16px;
-}
-
-.indicator-icon-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.indicator-icon {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.4);
-  transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.indicator-icon svg {
-  width: 100%;
-  height: 100%;
-  stroke-width: 1.5;
-  transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.indicator-tooltip {
-  position: absolute;
-  left: calc(100% + 1rem);
-  top: 50%;
-  transform: translateY(-50%) translateX(-10px);
-  background: rgba(10, 10, 10, 0.95);
-  color: var(--text-primary);
-  padding: 0.75rem 1.25rem;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  pointer-events: none;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  z-index: 100;
-}
-
-.indicator-tooltip::before {
-  content: '';
-  position: absolute;
-  right: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  border: 8px solid transparent;
-  border-right-color: rgba(10, 10, 10, 0.95);
+  padding: 0;
 }
 
 .indicator-dot {
@@ -127,32 +69,12 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  border-radius: 12px;
+  border-radius: 50%;
   background: rgba(0, 212, 255, 0.3);
   opacity: 0;
   transform: scale(0.8);
   transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   pointer-events: none;
-}
-
-.scroll-stack-indicator:hover .indicator-icon {
-  color: rgba(0, 212, 255, 0.7);
-}
-
-.scroll-stack-indicator:hover .indicator-icon svg {
-  stroke-width: 2;
-}
-
-.scroll-stack-indicator:hover .indicator-pulse {
-  opacity: 0.4;
-  transform: scale(1);
-  animation: pulse 6s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
-}
-
-.scroll-stack-indicator:hover .indicator-tooltip {
-  opacity: 1;
-  transform: translateX(0);
-  visibility: visible;
 }
 
 .scroll-stack-indicator:hover .indicator-dot {
@@ -162,20 +84,26 @@
   box-shadow: 0 4px 16px rgba(0, 212, 255, 0.4);
 }
 
-.scroll-stack-indicator.active .indicator-icon {
-  color: rgba(0, 212, 255, 1);
+.scroll-stack-indicator:hover .indicator-pulse {
+  opacity: 0.4;
+  transform: scale(1.6);
+  animation: pulse 6s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
 }
 
-.scroll-stack-indicator.active .indicator-icon svg {
-  stroke-width: 2.5;
-  filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.8));
+.scroll-stack-indicator.active .indicator-dot {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.9), rgba(0, 150, 255, 0.9));
+  border-color: rgba(0, 212, 255, 1);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.8), 0 0 60px rgba(0, 212, 255, 0.4), inset 0 0 20px rgba(0, 212, 255, 0.3);
+  transform: scale(1.1);
 }
 
 .scroll-stack-indicator.active .indicator-pulse {
   opacity: 0.5;
-  transform: scale(1);
+  transform: scale(2.2);
   animation: pulse 8s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
-  background: radial-gradient(circle, rgba(0, 212, 255, 0.6), rgba(0, 212, 255, 0));
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.8), rgba(0, 212, 255, 0));
 }
 
 .scroll-stack-indicator.active .indicator-dot {
@@ -269,23 +197,8 @@
   }
 
   .scroll-stack-indicator {
-    width: 200px;
-    height: 200px;
-    padding: 12px;
-  }
-
-  .indicator-tooltip {
-    left: auto;
-    right: calc(100% + 1rem);
-    top: 50%;
-    transform: translateY(-50%) translateX(10px);
-  }
-
-  .indicator-tooltip::before {
-    right: auto;
-    left: 100%;
-    border-right-color: transparent;
-    border-left-color: rgba(10, 10, 10, 0.95);
+    width: 24px;
+    height: 24px;
   }
 
   .indicator-dot {
@@ -316,9 +229,19 @@
   }
 
   .scroll-stack-indicator {
-    width: 160px;
-    height: 160px;
-    padding: 10px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .indicator-dot {
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+  }
+
+  .scroll-stack-indicator.active .indicator-dot {
+    width: 20px;
+    height: 20px;
   }
 
   .indicator-dot {
@@ -349,9 +272,19 @@
   }
 
   .scroll-stack-indicator {
-    width: 120px;
-    height: 120px;
-    padding: 8px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .indicator-dot {
+    width: 14px;
+    height: 14px;
+    border-width: 2px;
+  }
+
+  .scroll-stack-indicator.active .indicator-dot {
+    width: 18px;
+    height: 18px;
   }
 
   .indicator-dot {
