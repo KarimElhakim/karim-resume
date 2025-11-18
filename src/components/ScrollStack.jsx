@@ -9,7 +9,7 @@ const ScrollStackItem = ({ children, className = '' }) => {
   )
 }
 
-const ScrollStack = ({ children, className = '' }) => {
+const ScrollStack = ({ children, icons = [], className = '' }) => {
   const [activeIndex, setActiveIndex] = useState(0)
   const containerRef = useRef(null)
   const itemsRef = useRef([])
@@ -17,6 +17,31 @@ const ScrollStack = ({ children, className = '' }) => {
   const scrollTimeoutRef = useRef(null)
 
   const itemCount = Children.count(children)
+  
+  // Extract icons from children if not provided
+  const getIconForIndex = (index) => {
+    if (icons && icons[index]) {
+      return icons[index]
+    }
+    // Try to extract icon from child's content
+    const child = Children.toArray(children)[index]
+    if (child && child.props && child.props.children) {
+      const childrenArray = Children.toArray(child.props.children)
+      const headerElement = childrenArray.find(el => 
+        el && el.props && el.props.className && el.props.className.includes('exp-card-header')
+      )
+      if (headerElement && headerElement.props && headerElement.props.children) {
+        const headerChildren = Children.toArray(headerElement.props.children)
+        const iconElement = headerChildren.find(el => 
+          el && el.type === 'svg'
+        )
+        if (iconElement) {
+          return iconElement
+        }
+      }
+    }
+    return null
+  }
 
   const scrollToIndex = (index) => {
     if (!containerRef.current || index < 0 || index >= itemCount) return
@@ -32,7 +57,7 @@ const ScrollStack = ({ children, className = '' }) => {
 
     setTimeout(() => {
       isScrollingRef.current = false
-    }, 800)
+    }, 1500)
   }
 
   useEffect(() => {
@@ -166,10 +191,12 @@ const ScrollStack = ({ children, className = '' }) => {
 
   return (
     <div className="scroll-stack-wrapper">
-      {/* Navigation Indicators - Animated Dots */}
+      {/* Navigation Indicators - Full Logo Icons */}
       <div className="scroll-stack-indicators">
         {Children.map(children, (child, index) => {
           if (child.type !== ScrollStackItem) return null
+          
+          const icon = getIconForIndex(index)
           
           return (
             <button
@@ -179,9 +206,18 @@ const ScrollStack = ({ children, className = '' }) => {
               aria-label={`Go to card ${index + 1}`}
               title={`Card ${index + 1}`}
             >
-              <span className="indicator-dot">
+              <div className="indicator-icon-wrapper">
+                {icon ? (
+                  <div className="indicator-icon">
+                    {icon}
+                  </div>
+                ) : (
+                  <span className="indicator-dot">
+                    <span className="indicator-pulse"></span>
+                  </span>
+                )}
                 <span className="indicator-pulse"></span>
-              </span>
+              </div>
             </button>
           )
         })}
