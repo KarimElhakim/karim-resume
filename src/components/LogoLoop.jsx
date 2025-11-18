@@ -112,7 +112,8 @@ const LogoLoop = ({
               width: `${logoHeight}px`,
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              fontSize: `${logoHeight * 0.7}px`
             }}
             title={logo.title || logo.alt}
           >

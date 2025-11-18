@@ -404,7 +404,12 @@ body {
 }
 
 /* Tech Stack Section */
-.tech-stack-section {
+  .tech-logo-loop-wrapper {
+    height: 120px;
+    margin: 1.5rem 0;
+  }
+
+  .tech-stack-section {
   padding: 6rem 2rem;
   background: transparent;
   position: relative;
@@ -413,10 +418,17 @@ body {
 
 .tech-logo-loop-wrapper {
   width: 100%;
-  height: 500px;
+  height: 180px;
   position: relative;
   overflow: hidden;
-  margin: 2rem 0;
+  margin: 3rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tech-logo-loop-wrapper .logo-loop-container {
+  height: 100%;
 }
 
 .container {

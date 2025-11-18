@@ -43,8 +43,8 @@ const TechStackCarousel = () => {
         logos={techLogos}
         speed={120}
         direction="left"
-        logoHeight={360}
-        gap={120}
+        logoHeight={140}
+        gap={60}
         hoverSpeed={40}
         scaleOnHover
         fadeOut
