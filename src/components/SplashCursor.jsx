@@ -1058,7 +1058,7 @@ function SplashCursor({
     updateFrame();
 
     return () => {
-      // Cleanup if needed
+      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, [
     SIM_RESOLUTION,
