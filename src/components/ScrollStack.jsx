@@ -18,7 +18,7 @@ const ScrollStack = ({ children, icons = [], className = '' }) => {
 
   const itemCount = Children.count(children)
   
-  // Extract icons from children if not provided
+  // Extract icons and titles from children if not provided
   const getIconForIndex = (index) => {
     if (icons && icons[index]) {
       return icons[index]
@@ -41,6 +41,26 @@ const ScrollStack = ({ children, icons = [], className = '' }) => {
       }
     }
     return null
+  }
+
+  const getTitleForIndex = (index) => {
+    const child = Children.toArray(children)[index]
+    if (child && child.props && child.props.children) {
+      const childrenArray = Children.toArray(child.props.children)
+      const headerElement = childrenArray.find(el => 
+        el && el.props && el.props.className && el.props.className.includes('exp-card-header')
+      )
+      if (headerElement && headerElement.props && headerElement.props.children) {
+        const headerChildren = Children.toArray(headerElement.props.children)
+        const titleElement = headerChildren.find(el => 
+          el && el.type === 'h3' && el.props && el.props.className && el.props.className.includes('exp-card-title')
+        )
+        if (titleElement && titleElement.props && titleElement.props.children) {
+          return titleElement.props.children
+        }
+      }
+    }
+    return `Card ${index + 1}`
   }
 
   const scrollToIndex = (index) => {
@@ -197,14 +217,15 @@ const ScrollStack = ({ children, icons = [], className = '' }) => {
           if (child.type !== ScrollStackItem) return null
           
           const icon = getIconForIndex(index)
+          const title = getTitleForIndex(index)
           
           return (
             <button
               key={index}
               className={`scroll-stack-indicator ${index === activeIndex ? 'active' : ''}`}
               onClick={() => scrollToIndex(index)}
-              aria-label={`Go to card ${index + 1}`}
-              title={`Card ${index + 1}`}
+              aria-label={`Go to ${title}`}
+              data-title={title}
             >
               <div className="indicator-icon-wrapper">
                 {icon ? (
@@ -218,6 +239,7 @@ const ScrollStack = ({ children, icons = [], className = '' }) => {
                 )}
                 <span className="indicator-pulse"></span>
               </div>
+              <div className="indicator-tooltip">{title}</div>
             </button>
           )
         })}
