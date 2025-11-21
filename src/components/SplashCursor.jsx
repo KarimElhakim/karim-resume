@@ -1,24 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 function SplashCursor({
-  SIM_RESOLUTION = 64,
-  DYE_RESOLUTION = 512,
-  CAPTURE_RESOLUTION = 256,
+  SIM_RESOLUTION = 96, // Reduced to 75% of 128
+  DYE_RESOLUTION = 1080, // Reduced to 75% of 1440
+  CAPTURE_RESOLUTION = 384, // Reduced to 75% of 512
   DENSITY_DISSIPATION = 3.5,
   VELOCITY_DISSIPATION = 2,
   PRESSURE = 0.1,
-  PRESSURE_ITERATIONS = 10,
-  CURL = 2,
-  SPLAT_RADIUS = 0.2,
+  PRESSURE_ITERATIONS = 8, // Reduced to 8-10 range
+  CURL = 3,
+  SPLAT_RADIUS = 0.05,
   SPLAT_FORCE = 6000,
-  SHADING = true,
-  COLOR_UPDATE_SPEED = 15,
+  SHADING = false, // Disabled for performance
+  COLOR_UPDATE_SPEED = 10,
   BACK_COLOR = { r: 0.5, g: 0, b: 0 },
   TRANSPARENT = true
 }) {
   const canvasRef = useRef(null);
-  const cursorRef = useRef(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -70,17 +68,7 @@ function SplashCursor({
       if (!isWebGL2) gl = canvas.getContext('webgl', params) || canvas.getContext('experimental-webgl', params);
 
       if (!gl) {
-        console.error('WebGL not supported');
-        return {
-          gl: null,
-          ext: {
-            formatRGBA: null,
-            formatRG: null,
-            formatR: null,
-            halfFloatTexType: null,
-            supportLinearFiltering: false
-          }
-        };
+        return { gl: null, ext: null };
       }
 
       let halfFloat;
@@ -92,7 +80,7 @@ function SplashCursor({
         halfFloat = gl.getExtension('OES_texture_half_float');
         supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear');
       }
-      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clearColor(TRANSPARENT ? 0.0 : BACK_COLOR.r, TRANSPARENT ? 0.0 : BACK_COLOR.g, TRANSPARENT ? 0.0 : BACK_COLOR.b, TRANSPARENT ? 0.0 : 1.0);
 
       const halfFloatTexType = isWebGL2 ? gl.HALF_FLOAT : halfFloat && halfFloat.HALF_FLOAT_OES;
       let formatRGBA;
@@ -121,17 +109,6 @@ function SplashCursor({
       };
     }
 
-    const { gl, ext } = getWebGLContext(canvas);
-    if (!gl) {
-      console.error('WebGL context could not be created');
-      return;
-    }
-    
-    if (!ext.supportLinearFiltering) {
-      config.DYE_RESOLUTION = 256;
-      config.SHADING = false;
-    }
-
     function getSupportedFormat(gl, internalFormat, format, type) {
       if (!supportRenderTextureFormat(gl, internalFormat, format, type)) {
         switch (internalFormat) {
@@ -158,7 +135,21 @@ function SplashCursor({
       gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
       gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
       const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+      gl.deleteTexture(texture);
+      gl.deleteFramebuffer(fbo);
       return status === gl.FRAMEBUFFER_COMPLETE;
+    }
+
+    const { gl, ext } = getWebGLContext(canvas);
+    
+    if (!gl || !ext) {
+      console.warn('WebGL not supported - SplashCursor disabled');
+      return;
+    }
+
+    if (!ext.supportLinearFiltering) {
+      config.DYE_RESOLUTION = 256;
+      config.SHADING = false;
     }
 
     class Material {
@@ -249,7 +240,6 @@ function SplashCursor({
         varying vec2 vT;
         varying vec2 vB;
         uniform vec2 texelSize;
-
         void main () {
             vUv = aPosition * 0.5 + 0.5;
             vL = vUv - vec2(texelSize.x, 0.0);
@@ -268,7 +258,6 @@ function SplashCursor({
         precision mediump sampler2D;
         varying highp vec2 vUv;
         uniform sampler2D uTexture;
-
         void main () {
             gl_FragColor = texture2D(uTexture, vUv);
         }
@@ -283,7 +272,6 @@ function SplashCursor({
         varying highp vec2 vUv;
         uniform sampler2D uTexture;
         uniform float value;
-
         void main () {
             gl_FragColor = value * texture2D(uTexture, vUv);
         }
@@ -302,12 +290,10 @@ function SplashCursor({
       uniform sampler2D uDithering;
       uniform vec2 ditherScale;
       uniform vec2 texelSize;
-
       vec3 linearToGamma (vec3 color) {
           color = max(color, vec3(0));
           return max(1.055 * pow(color, vec3(0.416666667)) - 0.055, vec3(0));
       }
-
       void main () {
           vec3 c = texture2D(uTexture, vUv).rgb;
           #ifdef SHADING
@@ -315,17 +301,13 @@ function SplashCursor({
               vec3 rc = texture2D(uTexture, vR).rgb;
               vec3 tc = texture2D(uTexture, vT).rgb;
               vec3 bc = texture2D(uTexture, vB).rgb;
-
               float dx = length(rc) - length(lc);
               float dy = length(tc) - length(bc);
-
               vec3 n = normalize(vec3(dx, dy, length(texelSize)));
               vec3 l = vec3(0.0, 0.0, 1.0);
-
               float diffuse = clamp(dot(n, l) + 0.7, 0.7, 1.0);
               c *= diffuse;
           #endif
-
           float a = max(c.r, max(c.g, c.b));
           gl_FragColor = vec4(c, a);
       }
@@ -342,7 +324,6 @@ function SplashCursor({
         uniform vec3 color;
         uniform vec2 point;
         uniform float radius;
-
         void main () {
             vec2 p = vUv - point.xy;
             p.x *= aspectRatio;
@@ -365,20 +346,16 @@ function SplashCursor({
         uniform vec2 dyeTexelSize;
         uniform float dt;
         uniform float dissipation;
-
         vec4 bilerp (sampler2D sam, vec2 uv, vec2 tsize) {
             vec2 st = uv / tsize - 0.5;
             vec2 iuv = floor(st);
             vec2 fuv = fract(st);
-
             vec4 a = texture2D(sam, (iuv + vec2(0.5, 0.5)) * tsize);
             vec4 b = texture2D(sam, (iuv + vec2(1.5, 0.5)) * tsize);
             vec4 c = texture2D(sam, (iuv + vec2(0.5, 1.5)) * tsize);
             vec4 d = texture2D(sam, (iuv + vec2(1.5, 1.5)) * tsize);
-
             return mix(mix(a, b, fuv.x), mix(c, d, fuv.x), fuv.y);
         }
-
         void main () {
             #ifdef MANUAL_FILTERING
                 vec2 coord = vUv - dt * bilerp(uVelocity, vUv, texelSize).xy * texelSize;
@@ -405,19 +382,16 @@ function SplashCursor({
         varying highp vec2 vT;
         varying highp vec2 vB;
         uniform sampler2D uVelocity;
-
         void main () {
             float L = texture2D(uVelocity, vL).x;
             float R = texture2D(uVelocity, vR).x;
             float T = texture2D(uVelocity, vT).y;
             float B = texture2D(uVelocity, vB).y;
-
             vec2 C = texture2D(uVelocity, vUv).xy;
             if (vL.x < 0.0) { L = -C.x; }
             if (vR.x > 1.0) { R = -C.x; }
             if (vT.y > 1.0) { T = -C.y; }
             if (vB.y < 0.0) { B = -C.y; }
-
             float div = 0.5 * (R - L + T - B);
             gl_FragColor = vec4(div, 0.0, 0.0, 1.0);
         }
@@ -435,7 +409,6 @@ function SplashCursor({
         varying highp vec2 vT;
         varying highp vec2 vB;
         uniform sampler2D uVelocity;
-
         void main () {
             float L = texture2D(uVelocity, vL).y;
             float R = texture2D(uVelocity, vR).y;
@@ -461,19 +434,16 @@ function SplashCursor({
         uniform sampler2D uCurl;
         uniform float curl;
         uniform float dt;
-
         void main () {
             float L = texture2D(uCurl, vL).x;
             float R = texture2D(uCurl, vR).x;
             float T = texture2D(uCurl, vT).x;
             float B = texture2D(uCurl, vB).x;
             float C = texture2D(uCurl, vUv).x;
-
             vec2 force = 0.5 * vec2(abs(T) - abs(B), abs(R) - abs(L));
             force /= length(force) + 0.0001;
             force *= curl * C;
             force.y *= -1.0;
-
             vec2 velocity = texture2D(uVelocity, vUv).xy;
             velocity += force * dt;
             velocity = min(max(velocity, -1000.0), 1000.0);
@@ -494,7 +464,6 @@ function SplashCursor({
         varying highp vec2 vB;
         uniform sampler2D uPressure;
         uniform sampler2D uDivergence;
-
         void main () {
             float L = texture2D(uPressure, vL).x;
             float R = texture2D(uPressure, vR).x;
@@ -520,7 +489,6 @@ function SplashCursor({
         varying highp vec2 vB;
         uniform sampler2D uPressure;
         uniform sampler2D uVelocity;
-
         void main () {
             float L = texture2D(uPressure, vL).x;
             float R = texture2D(uPressure, vR).x;
@@ -549,7 +517,7 @@ function SplashCursor({
           gl.bindFramebuffer(gl.FRAMEBUFFER, target.fbo);
         }
         if (clear) {
-          gl.clearColor(0.0, 0.0, 0.0, 1.0);
+          gl.clearColor(TRANSPARENT ? 0.0 : BACK_COLOR.r, TRANSPARENT ? 0.0 : BACK_COLOR.g, TRANSPARENT ? 0.0 : BACK_COLOR.b, TRANSPARENT ? 0.0 : 1.0);
           gl.clear(gl.COLOR_BUFFER_BIT);
         }
         gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
@@ -611,13 +579,11 @@ function SplashCursor({
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
       gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, w, h, 0, format, type, null);
-
       let fbo = gl.createFramebuffer();
       gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
       gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
       gl.viewport(0, 0, w, h);
       gl.clear(gl.COLOR_BUFFER_BIT);
-
       let texelSizeX = 1.0 / w;
       let texelSizeY = 1.0 / h;
       return {
@@ -689,9 +655,27 @@ function SplashCursor({
     }
 
     updateKeywords();
+    
+    // Ensure canvas is sized to full document height immediately
+    resizeCanvas();
     initFramebuffers();
+
     let lastUpdateTime = Date.now();
     let colorUpdateTimer = 0.0;
+    let resizeTimeout = null;
+
+    // Simple resize handler - updates DOM directly without React state
+    const handleResize = () => {
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (resizeCanvas()) {
+          // Container height is updated in resizeCanvas internally
+          initFramebuffers();
+        }
+      }, 150);
+    };
+
+    window.addEventListener('resize', handleResize, { passive: true });
 
     function updateFrame() {
       const dt = calcDeltaTime();
@@ -712,11 +696,26 @@ function SplashCursor({
     }
 
     function resizeCanvas() {
-      let width = scaleByPixelRatio(canvas.clientWidth);
-      let height = scaleByPixelRatio(canvas.clientHeight);
+      // Use full document height, not just viewport
+      const fullHeight = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        window.innerHeight
+      );
+      let width = scaleByPixelRatio(window.innerWidth);
+      let height = scaleByPixelRatio(fullHeight);
+      
+      // Force canvas to match full document dimensions
       if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width;
         canvas.height = height;
+        // CSS must match actual document height, not just viewport
+        canvas.style.width = '100vw';
+        canvas.style.height = fullHeight + 'px';
+        // Update container height internally without React state
+        if (canvas.parentElement) {
+          canvas.parentElement.style.height = fullHeight + 'px';
+        }
         return true;
       }
       return false;
@@ -743,6 +742,7 @@ function SplashCursor({
 
     function step(dt) {
       gl.disable(gl.BLEND);
+
       curlProgram.bind();
       gl.uniform2f(curlProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY);
       gl.uniform1i(curlProgram.uniforms.uVelocity, velocity.read.attach(0));
@@ -862,8 +862,11 @@ function SplashCursor({
       pointer.id = id;
       pointer.down = true;
       pointer.moved = false;
+      // Account for scroll position to cover full document
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      const adjustedY = posY + scrollY;
       pointer.texcoordX = posX / canvas.width;
-      pointer.texcoordY = 1.0 - posY / canvas.height;
+      pointer.texcoordY = 1.0 - (adjustedY / canvas.height);
       pointer.prevTexcoordX = pointer.texcoordX;
       pointer.prevTexcoordY = pointer.texcoordY;
       pointer.deltaX = 0;
@@ -874,8 +877,11 @@ function SplashCursor({
     function updatePointerMoveData(pointer, posX, posY, color) {
       pointer.prevTexcoordX = pointer.texcoordX;
       pointer.prevTexcoordY = pointer.texcoordY;
+      // Account for scroll position to cover full document
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      const adjustedY = posY + scrollY;
       pointer.texcoordX = posX / canvas.width;
-      pointer.texcoordY = 1.0 - posY / canvas.height;
+      pointer.texcoordY = 1.0 - (adjustedY / canvas.height);
       pointer.deltaX = correctDeltaX(pointer.texcoordX - pointer.prevTexcoordX);
       pointer.deltaY = correctDeltaY(pointer.texcoordY - pointer.prevTexcoordY);
       pointer.moved = Math.abs(pointer.deltaX) > 0 || Math.abs(pointer.deltaY) > 0;
@@ -957,11 +963,18 @@ function SplashCursor({
     }
 
     function getResolution(resolution) {
-      let aspectRatio = gl.drawingBufferWidth / gl.drawingBufferHeight;
+      // Use full document dimensions for proper coverage
+      const fullHeight = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        window.innerHeight
+      );
+      const fullWidth = window.innerWidth;
+      let aspectRatio = fullWidth / fullHeight;
       if (aspectRatio < 1) aspectRatio = 1.0 / aspectRatio;
       const min = Math.round(resolution);
       const max = Math.round(resolution * aspectRatio);
-      if (gl.drawingBufferWidth > gl.drawingBufferHeight) return { width: max, height: min };
+      if (fullWidth > fullHeight) return { width: max, height: min };
       else return { width: min, height: max };
     }
 
@@ -980,15 +993,15 @@ function SplashCursor({
       return hash;
     }
 
-    window.addEventListener('mousedown', e => {
+    const handleMouseDown = (e) => {
       let pointer = pointers[0];
       let posX = scaleByPixelRatio(e.clientX);
       let posY = scaleByPixelRatio(e.clientY);
       updatePointerDownData(pointer, -1, posX, posY);
       clickSplat(pointer);
-    });
+    };
 
-    document.body.addEventListener('mousemove', function handleFirstMouseMove(e) {
+    const handleFirstMouseMove = (e) => {
       let pointer = pointers[0];
       let posX = scaleByPixelRatio(e.clientX);
       let posY = scaleByPixelRatio(e.clientY);
@@ -996,28 +1009,17 @@ function SplashCursor({
       updateFrame();
       updatePointerMoveData(pointer, posX, posY, color);
       document.body.removeEventListener('mousemove', handleFirstMouseMove);
-    });
+    };
 
-    let mouseMoveTimeout
     const handleMouseMove = (e) => {
       let pointer = pointers[0];
       let posX = scaleByPixelRatio(e.clientX);
       let posY = scaleByPixelRatio(e.clientY);
       let color = pointer.color;
       updatePointerMoveData(pointer, posX, posY, color);
-      
-      // Throttle visible cursor updates
-      if (!mouseMoveTimeout) {
-        mouseMoveTimeout = requestAnimationFrame(() => {
-          setMousePos({ x: e.clientX, y: e.clientY });
-          mouseMoveTimeout = null
-        })
-      }
     };
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-
-    document.body.addEventListener('touchstart', function handleFirstTouchStart(e) {
+    const handleFirstTouchStart = (e) => {
       const touches = e.targetTouches;
       let pointer = pointers[0];
       for (let i = 0; i < touches.length; i++) {
@@ -1027,9 +1029,9 @@ function SplashCursor({
         updatePointerDownData(pointer, touches[i].identifier, posX, posY);
       }
       document.body.removeEventListener('touchstart', handleFirstTouchStart);
-    });
+    };
 
-    window.addEventListener('touchstart', e => {
+    const handleTouchStart = (e) => {
       const touches = e.targetTouches;
       let pointer = pointers[0];
       for (let i = 0; i < touches.length; i++) {
@@ -1037,35 +1039,47 @@ function SplashCursor({
         let posY = scaleByPixelRatio(touches[i].clientY);
         updatePointerDownData(pointer, touches[i].identifier, posX, posY);
       }
-    });
+    };
 
-    window.addEventListener(
-      'touchmove',
-      e => {
-        const touches = e.targetTouches;
-        let pointer = pointers[0];
-        for (let i = 0; i < touches.length; i++) {
-          let posX = scaleByPixelRatio(touches[i].clientX);
-          let posY = scaleByPixelRatio(touches[i].clientY);
-          updatePointerMoveData(pointer, posX, posY, pointer.color);
-        }
-      },
-      false
-    );
+    const handleTouchMove = (e) => {
+      const touches = e.targetTouches;
+      let pointer = pointers[0];
+      for (let i = 0; i < touches.length; i++) {
+        let posX = scaleByPixelRatio(touches[i].clientX);
+        let posY = scaleByPixelRatio(touches[i].clientY);
+        updatePointerMoveData(pointer, posX, posY, pointer.color);
+      }
+    };
 
-    window.addEventListener('touchend', e => {
+    const handleTouchEnd = (e) => {
       const touches = e.changedTouches;
       let pointer = pointers[0];
       for (let i = 0; i < touches.length; i++) {
         updatePointerUpData(pointer);
       }
-    });
+    };
+
+    window.addEventListener('mousedown', handleMouseDown);
+    document.body.addEventListener('mousemove', handleFirstMouseMove);
+    window.addEventListener('mousemove', handleMouseMove);
+    document.body.addEventListener('touchstart', handleFirstTouchStart);
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchmove', handleTouchMove, false);
+    window.addEventListener('touchend', handleTouchEnd);
 
     updateFrame();
 
     return () => {
+      // Cleanup
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousedown', handleMouseDown);
+      document.body.removeEventListener('mousemove', handleFirstMouseMove);
       window.removeEventListener('mousemove', handleMouseMove);
-      if (mouseMoveTimeout) cancelAnimationFrame(mouseMoveTimeout);
+      document.body.removeEventListener('touchstart', handleFirstTouchStart);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
   }, [
     SIM_RESOLUTION,
@@ -1084,92 +1098,29 @@ function SplashCursor({
     TRANSPARENT
   ]);
 
-  // Smooth cursor following - throttled for performance
-  useEffect(() => {
-    if (!cursorRef.current) return;
-
-    const cursor = cursorRef.current;
-    let rafId = null;
-    let currentX = mousePos.x;
-    let currentY = mousePos.y;
-    let lastUpdate = 0;
-
-    const updateCursor = (timestamp) => {
-      // Throttle to ~30fps for cursor
-      if (timestamp - lastUpdate < 33) {
-        rafId = requestAnimationFrame(updateCursor);
-        return;
-      }
-      lastUpdate = timestamp;
-
-      const dx = mousePos.x - currentX;
-      const dy = mousePos.y - currentY;
-      
-      // Only update if movement is significant
-      if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) {
-        currentX += dx * 0.2;
-        currentY += dy * 0.2;
-        
-        cursor.style.left = `${currentX}px`;
-        cursor.style.top = `${currentY}px`;
-      }
-      
-      rafId = requestAnimationFrame(updateCursor);
-    };
-
-    rafId = requestAnimationFrame(updateCursor);
-
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, [mousePos]);
-
   return (
-    <>
-      {/* Visible Cursor */}
-      <div
-        ref={cursorRef}
-        className="splash-cursor-visual"
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        zIndex: 50,
+        pointerEvents: 'none',
+        width: '100vw',
+        height: '100%',
+        minHeight: '100vh'
+      }}
+    >
+      <canvas
+        ref={canvasRef}
+        id="fluid"
         style={{
-          position: 'fixed',
-          left: `${mousePos.x}px`,
-          top: `${mousePos.y}px`,
-          width: '20px',
-          height: '20px',
-          borderRadius: '50%',
-          border: '2px solid rgba(0, 212, 255, 0.8)',
-          background: 'rgba(0, 212, 255, 0.2)',
-          pointerEvents: 'none',
-          zIndex: 9999,
-          transform: 'translate(-50%, -50%)',
-          transition: 'opacity 0.2s ease',
-          boxShadow: '0 0 20px rgba(0, 212, 255, 0.5)'
+          width: '100vw',
+          height: '100%',
+          display: 'block'
         }}
       />
-      
-      {/* Splash Canvas */}
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          zIndex: 50,
-          pointerEvents: 'none',
-          width: '100%',
-          height: '100%'
-        }}
-      >
-        <canvas
-          ref={canvasRef}
-          id="fluid"
-          style={{
-            width: '100vw',
-            height: '100vh',
-            display: 'block'
-          }}
-        />
-      </div>
-    </>
+    </div>
   );
 }
 

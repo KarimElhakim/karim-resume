@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { FaDownload, FaGithub, FaEnvelope, FaLinkedin } from 'react-icons/fa'
 import { SiGmail } from 'react-icons/si'
@@ -10,6 +10,29 @@ import SplashCursor from './components/SplashCursor'
 import LiquidEther from './components/LiquidEther'
 import CardNav from './components/CardNav'
 
+// Simple Error Boundary to prevent SplashCursor from crashing the app
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('SplashCursor error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || null;
+    }
+    return this.props.children;
+  }
+}
+
 function App() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -18,10 +41,17 @@ function App() {
 
   useEffect(() => {
     let ticking = false
+    let lastScrollY = window.scrollY
+    
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 50)
+          const currentScrollY = window.scrollY
+          // Only update if scroll change is significant (reduces re-renders)
+          if (Math.abs(currentScrollY - lastScrollY) > 5) {
+            setIsScrolled(currentScrollY > 50)
+            lastScrollY = currentScrollY
+          }
           if (isMobileMenuOpen) {
             setIsMobileMenuOpen(false)
           }
@@ -147,7 +177,9 @@ function App() {
         autoResumeDelay={3000}
         autoRampDuration={0.6}
       />
-      <SplashCursor />
+      <ErrorBoundary fallback={null}>
+        <SplashCursor />
+      </ErrorBoundary>
       <CardNav
         items={navItems}
         baseColor="#fff"

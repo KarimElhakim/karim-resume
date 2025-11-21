@@ -28,10 +28,15 @@ const LogoLoop = ({
     const speedPerFrame = speed / 60 // Convert to pixels per frame at 60fps
     let lastFrameTime = performance.now()
 
+    // Adaptive frame rate for mobile
+    const isMobile = window.innerWidth < 768
+    const targetFPS = isMobile ? 30 : 60
+    const frameInterval = 1000 / targetFPS
+
     const animate = (currentTime) => {
-      // Throttle to ~60fps max
+      // Throttle to target FPS
       const deltaTime = currentTime - lastFrameTime
-      if (deltaTime < 16) {
+      if (deltaTime < frameInterval) {
         animationFrameRef.current = requestAnimationFrame(animate)
         return
       }
@@ -39,30 +44,31 @@ const LogoLoop = ({
 
       const currentSpeed = isHoveredRef.current && hoverSpeed > 0 ? hoverSpeed / 60 : speedPerFrame
       
+      // Use translate3d for GPU acceleration
       if (direction === 'left') {
         positionRef.current -= currentSpeed
         if (Math.abs(positionRef.current) >= totalWidth / 2) {
           positionRef.current = 0
         }
-        container.style.transform = `translateX(${positionRef.current}px)`
+        container.style.transform = `translate3d(${positionRef.current}px, 0, 0)`
       } else if (direction === 'right') {
         positionRef.current += currentSpeed
         if (positionRef.current >= totalWidth / 2) {
           positionRef.current = 0
         }
-        container.style.transform = `translateX(${positionRef.current}px)`
+        container.style.transform = `translate3d(${positionRef.current}px, 0, 0)`
       } else if (direction === 'up') {
         positionRef.current -= currentSpeed
         if (Math.abs(positionRef.current) >= totalWidth / 2) {
           positionRef.current = 0
         }
-        container.style.transform = `translateY(${positionRef.current}px)`
+        container.style.transform = `translate3d(0, ${positionRef.current}px, 0)`
       } else if (direction === 'down') {
         positionRef.current += currentSpeed
         if (positionRef.current >= totalWidth / 2) {
           positionRef.current = 0
         }
-        container.style.transform = `translateY(${positionRef.current}px)`
+        container.style.transform = `translate3d(0, ${positionRef.current}px, 0)`
       }
 
       animationFrameRef.current = requestAnimationFrame(animate)

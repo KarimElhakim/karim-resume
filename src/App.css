@@ -6,13 +6,38 @@
   box-sizing: border-box;
 }
 
-/* Optimize animations - only set will-change on actively animating elements */
+/* GPU Acceleration - Optimize animations with will-change and translate3d */
 .logo-loop-track {
   will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 .scroll-stack-item-wrapper {
   will-change: opacity, transform, filter;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.scroll-stack-item-wrapper.active {
+  will-change: auto;
+}
+
+/* GPU acceleration for all animated elements */
+.tech-carousel-track,
+.exp-carousel-track,
+.logo-loop-track,
+.scroll-stack-item-wrapper,
+.hero-char,
+.tech-item,
+.project-card,
+.exp-card,
+.work-item,
+.education-item {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 
 :root {
@@ -77,10 +102,12 @@ body {
   left: 50%;
   top: 2rem;
   z-index: 100;
-  transform: translateX(-50%);
+  transform: translate3d(-50%, 0, 0);
   width: 100%;
   max-width: 42rem;
   padding: 0 1rem;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .nav-glass {
@@ -88,9 +115,12 @@ body {
   border: 1px solid rgba(51, 51, 51, 0.3);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-radius: 9999px;
   padding: 0.5rem 1rem;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+  will-change: backdrop-filter, background;
 }
 
 .nav-scroll-container {
@@ -128,6 +158,8 @@ body {
 .nav-link-glass.active {
   background: rgba(255, 255, 255, 0.1);
   color: white;
+  transform: translateZ(0);
+  will-change: background;
 }
 
 /* Hero Section */
@@ -307,21 +339,23 @@ body {
 @keyframes typeChar {
   0% {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translate3d(0, 10px, 0);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
-/* Smooth transitions for all animations */
+/* Smooth transitions for all animations - GPU accelerated */
 .tech-carousel-track {
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
 .exp-carousel-track {
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
 /* GPU acceleration for smooth animations */
@@ -332,17 +366,24 @@ body {
   transform: translateZ(0);
   backface-visibility: hidden;
   perspective: 1000px;
+  will-change: transform, opacity;
+}
+
+.exp-card.active,
+.tech-carousel-item:not(:hover),
+.project-card:not(:hover) {
+  will-change: auto;
 }
 
 @keyframes glitchChar {
   0%, 100% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   25% {
-    transform: translateX(-2px);
+    transform: translate3d(-2px, 0, 0);
   }
   75% {
-    transform: translateX(2px);
+    transform: translate3d(2px, 0, 0);
   }
 }
 
@@ -364,11 +405,11 @@ body {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translate3d(0, 30px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -455,10 +496,11 @@ body {
 }
 
 .tech-item:hover {
-  transform: translateY(-5px);
+  transform: translate3d(0, -5px, 0);
   border-color: var(--accent);
   box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
   background: var(--bg-secondary);
+  will-change: transform;
 }
 
 .tech-icon {
@@ -662,7 +704,7 @@ body {
 .exp-carousel-btn {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translate3d(0, -50%, 0);
   background: rgba(20, 20, 20, 0.8);
   border: 1px solid var(--white-icon-tr);
   color: var(--white);
@@ -673,14 +715,18 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 10;
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 .exp-carousel-btn:hover {
   background: rgba(20, 20, 20, 1);
   border-color: var(--accent);
-  transform: translateY(-50%) scale(1.1);
+  transform: translate3d(0, -50%, 0) scale(1.1);
+  will-change: transform;
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
 }
 
 .exp-carousel-btn-left {
@@ -704,13 +750,18 @@ body {
   border-radius: 50%;
   background: var(--border);
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: width, background;
 }
 
 .exp-indicator.active {
   background: var(--accent);
   width: 40px;
   border-radius: 6px;
+  will-change: auto;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
 }
 
 /* GitHub Projects */
@@ -734,8 +785,9 @@ body {
 
 .project-card:hover {
   border-color: var(--accent);
-  transform: translateY(-5px);
+  transform: translate3d(0, -5px, 0);
   box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+  will-change: transform;
 }
 
 .project-header {
@@ -802,6 +854,19 @@ body {
 .project-stars {
   font-size: 0.9rem;
   color: var(--text-secondary);
+}
+
+.projects-loading,
+.projects-error {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.projects-error-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
 }
 
 .projects-loading,
@@ -980,7 +1045,8 @@ body {
 .work-item:hover {
   border-color: var(--accent);
   box-shadow: 0 10px 40px rgba(0, 212, 255, 0.1);
-  transform: translateY(-2px);
+  transform: translate3d(0, -2px, 0);
+  will-change: transform;
 }
 
 .work-item:last-child {
@@ -1073,7 +1139,8 @@ body {
 .education-item:hover {
   border-color: var(--accent);
   box-shadow: 0 10px 40px rgba(0, 212, 255, 0.1);
-  transform: translateY(-2px);
+  transform: translate3d(0, -2px, 0);
+  will-change: transform;
 }
 
 .education-item:last-child {
@@ -1160,8 +1227,9 @@ body {
 .download-button:hover {
   background: var(--accent-hover);
   border-color: var(--accent-hover);
-  transform: translateY(-3px);
+  transform: translate3d(0, -3px, 0);
   box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+  will-change: transform;
 }
 
 .download-button .button-icon {
@@ -1307,8 +1375,9 @@ body {
 
 .social-link:hover {
   background: var(--accent-hover);
-  transform: translateY(-2px);
+  transform: translate3d(0, -2px, 0);
   box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+  will-change: transform;
 }
 
 /* Contact Form */
@@ -1375,8 +1444,9 @@ body {
 
 .submit-button:hover:not(:disabled) {
   background: var(--accent-hover);
-  transform: translateY(-2px);
+  transform: translate3d(0, -2px, 0);
   box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+  will-change: transform;
 }
 
 .submit-button:disabled {
@@ -1418,9 +1488,11 @@ body {
   font-size: 1rem;
 }
 
-/* Smooth Scrolling */
+/* Smooth Scrolling - GPU accelerated */
 html {
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  transform: translateZ(0);
 }
 
 /* Responsive Design */

@@ -78,7 +78,16 @@ const ScrollStack = ({ children, icons = [], className = '' }) => {
     }
 
     let scrollTimeout
+    let lastScrollTime = 0
+    const scrollThrottle = 100 // Throttle scroll handling
+    
     const handleScroll = () => {
+      const now = performance.now()
+      if (now - lastScrollTime < scrollThrottle) {
+        return
+      }
+      lastScrollTime = now
+      
       if (rafId) return
       
       clearTimeout(scrollTimeout)
